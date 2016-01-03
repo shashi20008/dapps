@@ -7,25 +7,25 @@
 #include <string>
 namespace dapps
 {
-	class JSONValue; // Forward declaration
+	class JSON_t; // Forward declaration
 	
-	typedef std::map<std::string, JSONValue*> JSONObject;
-	typedef std::list<JSONValue*> JSONArray;
+	typedef std::map<std::string, JSON_t*> JSONObject;
+	typedef std::list<JSON_t*> JSONArray;
 	typedef int JSONValueType;
 	
 	typedef union 
 	{
-		JSONObject* object;
-		JSONArray* array;
-		char* str;
-		double floatVal;
-		int64_t intVal; 
+		JSONObject* m_object;
+		JSONArray* m_array;
+		char* m_str;
+		double m_floatVal;
+		int64_t m_intVal; 
 	} JSONContainer;
 	
-	class JSONValue 
+	class JSON_t 
 	{
-		JSONValueType type;
-		JSONContainer* val;
+		JSONValueType m_type;
+		JSONContainer m_val;
 		
 		public:
 			static JSONValueType VALUE_TYPE_OBJECT;
