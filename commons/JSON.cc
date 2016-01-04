@@ -1,5 +1,6 @@
 #include <iostream>
-#include <stdint.h>
+#include <cstring>
+#include <cstdlib>
 #include "JSON.h"
 #include "JSONTypes.h"
 
@@ -43,33 +44,48 @@ dapps::JSONObject* dapps::JSON::parseObject(std::string& input, uint64_t& counte
 	JSONObject* _object = new JSONObject();
 	counter++;
 	skipWhiteSpace(input, counter);
-	std::string _key = parseKey(input, counter);
+	do
+	{
+		std::string _key = parseKey(input, counter);
+		
+		JSON_t* _val = new JSON_t();
+		if(input[counter] == '{')
+		{
+			_val->m_type = JSON_t::VALUE_TYPE_OBJECT;
+			_val->m_val.m_object = parseObject(input, counter);
+		}
+		else if(input[counter] == '[')
+		{
+			_val->m_type = JSON_t::VALUE_TYPE_ARRAY;
+			_val->m_val.m_array = parseArray(input, counter);
+		}
+		else if(input[counter] == '"')
+		{
+			_val->m_type = JSON_t::VALUE_TYPE_STRING;
+			_val->m_val.m_str = parseString(input, counter);
+		}
+		else if((input[counter] >= '0' && input[counter] <= '9') || input[counter] == '-')
+		{
+			delete _val;
+			_val = parseNumber(input, counter);
+		}
+		
+		// Put it on the _object
+		_object->insert(JSONPair(_key, _val));
+		skipWhiteSpace(input, counter);
+		if(input[counter] == ',')
+		{
+			counter++;
+		}
+		else
+		{
+			// Mark end of object here.
+			// Otherwise faulty JSONs might 'cause crash.
+		}
+		
+		skipWhiteSpace(input, counter);
+	} while(input[counter] != '}'); // Repeat until end of object.
 	
-	JSON_t* _val = new JSON_t();
-	if(input[counter] == '{')
-	{
-		_val->m_type = JSON_t::VALUE_TYPE_OBJECT;
-		_val->m_val->m_object = parseObject(input, counter);
-	}
-	else if(input[counter] == '[')
-	{
-		_val->m_type = JSON_t::VALUE_TYPE_ARRAY;
-		_val->m_val->m_array = parseArray(input, counter);
-	}
-	else if(input[counter] == '"')
-	{
-		_val->m_type = JSON_t::VALUE_TYPE_STRING;
-		_val->m_val->m_str = parseString(input, counter);
-	}
-	else if(input[counter] >= '0' && input[counter] <= '9')
-	{
-		delete _val;
-		_val = parseNumber(input, counter);
-	}
-	
-	// Put it on the _object
-	
-	// Repeat until end of object.
 	return _object;
 }
 
@@ -106,7 +122,7 @@ char* dapps::JSON::parseString(std::string& input, uint64_t& counter)
 	skipWhiteSpace(input, counter);
 	
 	char* retStr = new char[str.length() + 1];
-	strcpy(retStr, str.c_str());
+	std::strcpy(retStr, str.c_str());
 	
 	//Cleanup
 	delete strBuffer;
@@ -129,7 +145,7 @@ dapps::JSON_t* dapps::JSON::parseNumber(std::string& input, uint64_t& counter)
 	char* numBuffer = new char[101];
 	int numCounter = 0;
 	bool hasDecimal = false;
-	while((cur >= '0' && cur <= '9') && cur != '.' && cur != '-')
+	while((cur >= '0' && cur <= '9') || cur == '.' || cur == '-')
 	{
 		numBuffer[numCounter++] = cur;
 		
@@ -167,7 +183,7 @@ dapps::JSON_t* dapps::JSON::parseNumber(std::string& input, uint64_t& counter)
 }
 
 // @TODO: refactor
-int64_t dapps::JSON::strtoll(char* numStr)
+int64_t dapps::JSON::strtoll(const char* numStr)
 {
 	int64_t retVal = 0;
 	int i = 0;
@@ -220,13 +236,10 @@ std::string dapps::JSON::parseKey(std::string& input, uint64_t& counter)
 	skipWhiteSpace(input, counter);
 	if(input[counter] != ':')
 	{
-		std::cout << "Not the key. Returning NULL" << std::endl;
 		return NULL;
 	}
 	counter++;
 	skipWhiteSpace(input, counter);
-	
-	std::cout << key << std::endl;
 	
 	// Cleanup
 	delete keyBuffer;

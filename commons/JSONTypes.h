@@ -10,6 +10,7 @@ namespace dapps
 	class JSON_t; // Forward declaration
 	
 	typedef std::map<std::string, JSON_t*> JSONObject;
+	typedef std::pair<std::string, JSON_t*> JSONPair;
 	typedef std::list<JSON_t*> JSONArray;
 	typedef int JSONValueType;
 	
@@ -24,15 +25,15 @@ namespace dapps
 	
 	class JSON_t 
 	{
-		JSONValueType m_type;
-		JSONContainer m_val;
-		
 		public:
-			static JSONValueType VALUE_TYPE_OBJECT;
-			static JSONValueType VALUE_TYPE_ARRAY;
-			static JSONValueType VALUE_TYPE_STRING;
-			static JSONValueType VALUE_TYPE_FLOAT;
-			static JSONValueType VALUE_TYPE_INTEGER;
+			JSONValueType m_type;
+			JSONContainer m_val;
+		
+			static const JSONValueType VALUE_TYPE_OBJECT;
+			static const JSONValueType VALUE_TYPE_ARRAY;
+			static const JSONValueType VALUE_TYPE_STRING;
+			static const JSONValueType VALUE_TYPE_FLOAT;
+			static const JSONValueType VALUE_TYPE_INTEGER;
 	};
 	
 }

@@ -20,7 +20,7 @@ namespace dapps
 			static std::string parseKey(std::string&, uint64_t&);
 			static char* parseString(std::string&, uint64_t&);
 			static JSON_t* parseNumber(std::string&, uint64_t&);
-			static int64_t strtoll(char*);
+			static int64_t strtoll(const char*);
 	};
 }
 
