@@ -8,7 +8,8 @@ LDLIBS=-luv
 SRCS=dapps.cc \
 	utilities/ArgsProcessor.cc \
 	commons/JSON.cc \
-	commons/JSONTypes.cc
+	commons/JSONTypes.cc \
+	registry/RegistryServer.cc
 
 OBJS=$(subst .cc,.o,$(SRCS))
 
