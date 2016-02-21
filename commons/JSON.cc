@@ -11,11 +11,11 @@ dapps::JSON_t* dapps::JSON::parse(std::string input)
 	
 	if(input[i] == '{')
 	{
-		parseObject(input, i);
+		return parseObject(input, i);
 	}
 	else if(input[i] == '[')
 	{
-		parseArray(input, i);
+		return parseArray(input, i);
 	}
 	else
 	{
@@ -34,7 +34,7 @@ void dapps::JSON::skipWhiteSpace(std::string& input, uint64_t& counter)
 	}
 }
 
-dapps::JSONObject* dapps::JSON::parseObject(std::string& input, uint64_t& counter)
+dapps::JSON_t* dapps::JSON::parseObject(std::string& input, uint64_t& counter)
 {
 	char cur = input[counter];
 	if(cur != '{')
@@ -48,25 +48,21 @@ dapps::JSONObject* dapps::JSON::parseObject(std::string& input, uint64_t& counte
 	{
 		std::string _key = parseKey(input, counter);
 		
-		JSON_t* _val = new JSON_t();
+		JSON_t* _val;
 		if(input[counter] == '{')
 		{
-			_val->m_type = JSON_t::VALUE_TYPE_OBJECT;
-			_val->m_val.m_object = parseObject(input, counter);
+			_val = parseObject(input, counter);
 		}
 		else if(input[counter] == '[')
 		{
-			_val->m_type = JSON_t::VALUE_TYPE_ARRAY;
-			_val->m_val.m_array = parseArray(input, counter);
+			_val = parseArray(input, counter);
 		}
 		else if(input[counter] == '"')
 		{
-			_val->m_type = JSON_t::VALUE_TYPE_STRING;
-			_val->m_val.m_str = parseString(input, counter);
+			_val = parseString(input, counter);
 		}
 		else if((input[counter] >= '0' && input[counter] <= '9') || input[counter] == '-')
 		{
-			delete _val;
 			_val = parseNumber(input, counter);
 		}
 		
@@ -86,10 +82,14 @@ dapps::JSONObject* dapps::JSON::parseObject(std::string& input, uint64_t& counte
 		skipWhiteSpace(input, counter);
 	} while(input[counter] != '}'); // Repeat until end of object.
 	
-	return _object;
+	JSON_t* _container = new JSON_t();
+	_container->m_type = JSON_t::VALUE_TYPE_OBJECT;
+	_container->m_val.m_object = _object;
+	
+	return _container;
 }
 
-char* dapps::JSON::parseString(std::string& input, uint64_t& counter)
+dapps::JSON_t* dapps::JSON::parseString(std::string& input, uint64_t& counter)
 {
 	if(input[counter] != '"')
 	{
@@ -127,7 +127,10 @@ char* dapps::JSON::parseString(std::string& input, uint64_t& counter)
 	//Cleanup
 	delete strBuffer;
 	
-	return retStr;
+	JSON_t* _container = new JSON_t();
+	_container->m_type = JSON_t::VALUE_TYPE_STRING;
+	_container->m_val.m_str = retStr;
+	return _container;
 }
 
 dapps::JSON_t* dapps::JSON::parseNumber(std::string& input, uint64_t& counter)
@@ -247,9 +250,19 @@ std::string dapps::JSON::parseKey(std::string& input, uint64_t& counter)
 	return key;
 }
 
-dapps::JSONArray* dapps::JSON::parseArray(std::string& input, uint64_t& counter)
+dapps::JSON_t* dapps::JSON::parseArray(std::string& input, uint64_t& counter)
 {
-	return NULL;
+	if(input[counter] != '[') {
+		return NULL;
+	}
+	
+	JSONArray* _array = new JSONArray();
+	skipWhiteSpace(input, counter);
+	
+	JSON_t* _container = new JSON_t();
+	_container->m_type = JSON_t::VALUE_TYPE_ARRAY;
+	_container->m_val.m_array = _array;
+	return _container;
 }
 
 std::string dapps::JSON::stringify(dapps::JSON_t* json)
