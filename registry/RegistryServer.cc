@@ -9,21 +9,21 @@ dapps::RegistryServer::~RegistryServer() {
 }
 
 void dapps::RegistryServer::ServerSetup() {
-	loop = uv_default_loop();
+	m_loop = uv_default_loop();
 
-	server = (uv_tcp_t*) malloc(sizeof(uv_tcp_t));
-    uv_tcp_init(loop, server);
+	m_server = (uv_tcp_t*) malloc(sizeof(uv_tcp_t));
+    uv_tcp_init(m_loop, m_server);
 
     // Save current object reference for use in callbacks
-    server->data = this;
-    uv_ip4_addr("0.0.0.0", 8080, &addr);
-	uv_tcp_bind(server, (const struct sockaddr*)&addr, 0);
+    m_server->data = this;
+    uv_ip4_addr("0.0.0.0", 8080, &m_addr);
+	uv_tcp_bind(m_server, (const struct sockaddr*)&m_addr, 0);
   
-    int r = uv_listen((uv_stream_t*) server, 1, this->OnNewConnection);
+    int r = uv_listen((uv_stream_t*) m_server, 1, this->OnNewConnection);
     if (r) {
         fprintf(stderr, "Listen error %s\n", uv_strerror(r));
     }
-    uv_run(loop, UV_RUN_DEFAULT);
+    uv_run(m_loop, UV_RUN_DEFAULT);
 }
 
 void dapps::RegistryServer::OnNewConnection(uv_stream_t *server, int status) {
@@ -38,7 +38,7 @@ void dapps::RegistryServer::OnNewConnection(uv_stream_t *server, int status) {
     uv_tcp_t* client = (uv_tcp_t*) malloc(sizeof(uv_tcp_t));
     
     client->data = server->data;
-    uv_tcp_init(_this->loop, client);
+    uv_tcp_init(_this->m_loop, client);
     if (uv_accept(server, (uv_stream_t*) client) == 0) {
         uv_read_start((uv_stream_t*) client, AllocBuffer, OnClientRead);
     } else {

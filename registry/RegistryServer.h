@@ -14,10 +14,10 @@ namespace dapps
 	class RegistryServer
 	{
 		private:
-			uv_loop_t* loop;
-			uv_tcp_t* server;
+			uv_loop_t* m_loop;
+			uv_tcp_t* m_server;
 			//uv_tcp_t *client;
-			struct sockaddr_in addr;
+			struct sockaddr_in m_addr;
 
 		public:
 			RegistryServer();
