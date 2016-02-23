@@ -10,10 +10,11 @@ namespace dapps
 	class LoggingUtil
 	{
 		private:
-			bool logToFile;
-			bool suppressStdout;
-			std::string outputLogFile;
-			std::string errorLogFile;
+			bool m_logToFile;
+			bool m_suppressStdout;
+			std::string m_outputLogFile;
+			std::string m_errorLogFile;
+			LogLevel m_logLevel;
 			
 		public:
 			LoggingUtil();
@@ -22,6 +23,10 @@ namespace dapps
 			void logVerbose(std::string message, std::string moduleName="DAPPS");
 			void logDebug(std::string message, std::string moduleName="DAPPS");
 			void log(std::string message, std::string moduleName="DAPPS");
+			
+			static LogLevel LOG_LEVEL_VERBOSE;
+			static LogLevel LOG_LEVEL_DEBUG;
+			static LogLevel LOG_LEVEL_APPLICATION;
 	};
 }
 
