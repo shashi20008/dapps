@@ -7,6 +7,7 @@ int main(int argc, char** argv)
 {
 	Dapps* app = new Dapps();
 	app->args = new ArgsProcessor(argc, argv);
+	app->loggingUtil = new LoggingUtil();
 
 	if(app->args->has("registry")){
 		app->registry = new RegistryServer(app);
