@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <uv.h>
 #include <fstream>
+#include "../dapps.h"
 // #include <string>
 // #include <map>
 // #include <vector>
@@ -16,13 +17,14 @@ namespace dapps
 	class RegistryServer
 	{
 		private:
+			Dapps* m_app;
 			uv_loop_t* m_loop;
 			uv_tcp_t* m_server;
 			//uv_tcp_t *client;
 			struct sockaddr_in m_addr;
 
 		public:
-			RegistryServer();
+			RegistryServer(Dapps* );
 			~RegistryServer();
 			void ServerSetup();
 			static void writeData(uv_stream_t*, uv_stream_t*, std::string);

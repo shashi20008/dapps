@@ -2,7 +2,8 @@
 #include <map>
 #include "../utilities/StringUtils.h"
 
-dapps::RegistryServer::RegistryServer() {
+dapps::RegistryServer::RegistryServer(dapps::Dapps* _app) {
+	this->m_app = _app;
 	ServerSetup();
 }
 
