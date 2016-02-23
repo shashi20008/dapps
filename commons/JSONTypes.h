@@ -21,6 +21,7 @@ namespace dapps
 		char* m_str;
 		double m_floatVal;
 		int64_t m_intVal; 
+		bool m_bool;
 	} JSONContainer;
 	
 	class JSON_t 
@@ -28,12 +29,14 @@ namespace dapps
 		public:
 			JSONValueType m_type;
 			JSONContainer m_val;
-		
+
+			static const JSONValueType VALUE_TYPE_INVALID;
 			static const JSONValueType VALUE_TYPE_OBJECT;
 			static const JSONValueType VALUE_TYPE_ARRAY;
 			static const JSONValueType VALUE_TYPE_STRING;
 			static const JSONValueType VALUE_TYPE_FLOAT;
 			static const JSONValueType VALUE_TYPE_INTEGER;
+			static const JSONValueType VALUE_TYPE_BOOLEAN;
 	};
 	
 }

@@ -48,23 +48,13 @@ dapps::JSON_t* dapps::JSON::parseObject(std::string& input, uint64_t& counter)
 	{
 		std::string _key = parseKey(input, counter);
 		
-		JSON_t* _val;
-		if(input[counter] == '{')
-		{
-			_val = parseObject(input, counter);
+		JSONParserFunc parser = getParserFunc(input, counter);
+		
+		if(parser == NULL) {
+			// Invalid JSON. Throw
+			return NULL;
 		}
-		else if(input[counter] == '[')
-		{
-			_val = parseArray(input, counter);
-		}
-		else if(input[counter] == '"')
-		{
-			_val = parseString(input, counter);
-		}
-		else if((input[counter] >= '0' && input[counter] <= '9') || input[counter] == '-')
-		{
-			_val = parseNumber(input, counter);
-		}
+		JSON_t* _val = (*parser) (input, counter);
 		
 		// Put it on the _object
 		_object->insert(JSONPair(_key, _val));
@@ -138,7 +128,7 @@ dapps::JSON_t* dapps::JSON::parseNumber(std::string& input, uint64_t& counter)
 	JSON_t* _val = new JSON_t();
 	char cur = input[counter];
 	
-	if((cur <= '0' || cur >= '9') && cur != '-')
+	if((cur < '0' || cur > '9') && cur != '-')
 	{
 		// not a number.
 		// throw
@@ -207,6 +197,48 @@ int64_t dapps::JSON::strtoll(const char* numStr)
 	return retVal;
 }
 
+// @TODO: refactor
+std::string dapps::JSON::lltostr(int64_t integer)
+{
+	if(integer == INT64_C(0))
+	{
+		return "0";
+	}
+	
+	int64_t len = 0;
+	bool isNeg = (integer < 0);
+	int64_t intCopy = integer * (isNeg? -1 : 1);
+	
+	while(intCopy > 0) 
+	{
+		intCopy = intCopy / 10;
+		len++;
+	}
+	intCopy = integer * (isNeg? -1 : 1);
+	char *retCStr = new char[len + (isNeg? 1 : 0) + 1];
+	
+	int i = 0;
+	do
+	{
+		retCStr[i++] = '0' + (intCopy % 10);
+		intCopy = intCopy / 10;
+		
+	} while(intCopy > 0);
+	retCStr[i] = '\0';
+	
+	// Reverse the order.
+	char swapChar;
+	for(i--; i > len / 2; i--)
+	{
+		swapChar = retCStr[i];
+		retCStr[i] = retCStr[len - i -1];
+		retCStr[len - i -1] = swapChar;
+	}
+	std::string retStr = std::string(retCStr);
+	delete retCStr;
+	return (isNeg? "-" : "") + retStr;
+}
+
 // Almost duplicate of parseString. Move commons out.
 std::string dapps::JSON::parseKey(std::string& input, uint64_t& counter)
 {
@@ -265,7 +297,170 @@ dapps::JSON_t* dapps::JSON::parseArray(std::string& input, uint64_t& counter)
 	return _container;
 }
 
+dapps::JSONValueType dapps::JSON::getJSONValueType(std::string& input, uint64_t& counter)
+{
+	if(input[counter] == '{')
+	{
+		return JSON_t::VALUE_TYPE_OBJECT;
+	}
+	else if(input[counter] == '[')
+	{
+		return JSON_t::VALUE_TYPE_ARRAY;
+	}
+	else if(input[counter] == '"')
+	{
+		return JSON_t::VALUE_TYPE_STRING;
+	}
+	else if((input[counter] >= '0' && input[counter] <= '9') || input[counter] == '-')
+	{
+		return JSON_t::VALUE_TYPE_INTEGER;
+	}
+	return JSON_t::VALUE_TYPE_INVALID;
+}
+
+dapps::JSONParserFunc dapps::JSON::getParserFunc(std::string& input, uint64_t& counter)
+{
+	if(input[counter] == '{')
+	{
+		return parseObject;
+	}
+	else if(input[counter] == '[')
+	{
+		return parseArray;
+	}
+	else if(input[counter] == '"')
+	{
+		return parseString;
+	}
+	else if((input[counter] >= '0' && input[counter] <= '9') || input[counter] == '-')
+	{
+		return parseNumber;
+	}
+	return NULL;
+}
+
+dapps::JSONStringifierFunc dapps::JSON::getStringifierFunc(dapps::JSON_t* json)
+{
+	if(json == NULL)
+	{
+		return stringifyInvalid;
+	}
+	else if(json->m_type == JSON_t::VALUE_TYPE_ARRAY)
+	{
+		return stringifyArray;
+	}
+	else if(json->m_type == JSON_t::VALUE_TYPE_OBJECT)
+	{
+		return stringifyObject;
+	}
+	else if(json->m_type == JSON_t::VALUE_TYPE_STRING)
+	{
+		return stringifyString;
+	}
+	else if(json->m_type == JSON_t::VALUE_TYPE_FLOAT)
+	{
+		return stringifyFloat;
+	}
+	else if(json->m_type == JSON_t::VALUE_TYPE_INTEGER)
+	{
+		return stringifyInteger;
+	} 
+	else if(json->m_type == JSON_t::VALUE_TYPE_BOOLEAN)
+	{
+		return stringifyBoolean;
+	}
+	return stringifyInvalid;
+}
+
 std::string dapps::JSON::stringify(dapps::JSON_t* json)
 {
-	return "";
+	std::string _json;
+	_json = getStringifierFunc(json)(json);
+	return _json;
+}
+
+std::string dapps::JSON::stringifyObject(dapps::JSON_t* json)
+{
+	std::string retStr = "null";
+	if(json->m_type != JSON_t::VALUE_TYPE_OBJECT)
+	{
+		return retStr;
+	}
+	JSONObject* object = json->m_val.m_object;
+	if(object == NULL) 
+	{
+		return retStr;
+	}
+	JSONObject::iterator it = object->begin();
+	retStr = "{}";
+	if(it == object->end())
+	{
+		return retStr;
+	}
+	
+	retStr = "{";
+	do
+	{
+		retStr += "\"" + it->first +"\":";
+		retStr += getStringifierFunc(it->second)(it->second);
+		retStr += ",";
+		it++;
+	} while(it != object->end());
+	// to remove last comma
+	retStr = retStr.substr(0, retStr.length() - 1);
+	retStr += "}";
+	return retStr;
+}
+
+std::string dapps::JSON::stringifyArray(dapps::JSON_t* json)
+{
+	if(json->m_type != JSON_t::VALUE_TYPE_ARRAY)
+	{
+		return "null";
+	}
+	return "null";
+}
+
+std::string dapps::JSON::stringifyString(dapps::JSON_t* json)
+{
+	if(json->m_type != JSON_t::VALUE_TYPE_STRING) 
+	{
+		return "null";
+	}
+	std::string retStr = "\"";
+	retStr += std::string(json->m_val.m_str);
+	retStr += "\"";
+	return retStr;
+}
+
+std::string dapps::JSON::stringifyFloat(dapps::JSON_t* json)
+{
+	if(json->m_type != JSON_t::VALUE_TYPE_FLOAT)
+	{
+		return "null";
+	}
+	return dtostr(json->m_val.m_floatVal);
+}
+
+std::string dapps::JSON::stringifyInteger(dapps::JSON_t* json)
+{
+	if(json->m_type != JSON_t::VALUE_TYPE_INTEGER)
+	{
+		return "null";
+	}
+	return lltostr(json->m_val.m_intVal);
+}
+
+std::string dapps::JSON::stringifyBoolean(dapps::JSON_t* json)
+{
+	if(json->m_type != JSON_t::VALUE_TYPE_BOOLEAN)
+	{
+		return "null";
+	}
+	return (json->m_val.m_bool?"true":"false");
+}
+
+std::string dapps::JSON::stringifyInvalid(dapps::JSON_t* json)
+{
+	return "null";
 }

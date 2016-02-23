@@ -1,4 +1,5 @@
 #include "dapps.h"
+#include "commons/JSON.h"
 
 using namespace dapps;
 
@@ -11,5 +12,12 @@ int main(int argc, char** argv)
 		app->registry = new RegistryServer();
 	}
 	
+	if(app->args->has("testJSON"))
+	{
+		std::cout << "testing json" << std::endl;
+		JSON_t* _json = JSON::parse("{\"abcd\":\"efgh\",\"num\": 123456789, \"negnum\": -123, \"zero\":0,  \"key\": {\"inner\": \"innerval\"}}");
+		std::cout << "json parsed" << _json->m_type << std::endl;
+		std::cout << "JSON:: " << JSON::stringify(_json).c_str() <<std::endl;
+	}
 	return 0;
 }
