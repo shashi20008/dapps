@@ -1,7 +1,8 @@
 #ifndef __RegistryServer__
 #define __RegistryServer__
 
-#include <string.h>
+#include <string>
+#include <cstring>
 #include <iostream>
 #include <stdlib.h>
 #include <uv.h>
