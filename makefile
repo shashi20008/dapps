@@ -9,7 +9,8 @@ SRCS=dapps.cc \
 	utilities/ArgsProcessor.cc \
 	commons/JSON.cc \
 	commons/JSONTypes.cc \
-	registry/RegistryServer.cc
+	registry/RegistryServer.cc \
+	utilities/StringUtils.cc
 
 OBJS=$(subst .cc,.o,$(SRCS))
 

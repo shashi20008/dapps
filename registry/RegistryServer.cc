@@ -1,4 +1,6 @@
 #include "RegistryServer.h"
+#include <map>
+#include "../utilities/StringUtils.h"
 
 dapps::RegistryServer::RegistryServer() {
 	ServerSetup();
@@ -38,28 +40,71 @@ void dapps::RegistryServer::OnNewConnection(uv_stream_t *server, int status) {
     uv_tcp_t* client = (uv_tcp_t*) malloc(sizeof(uv_tcp_t));
     
     client->data = server->data;
+    std::string message = "Hello from Server!";
     uv_tcp_init(_this->m_loop, client);
     if (uv_accept(server, (uv_stream_t*) client) == 0) {
         uv_read_start((uv_stream_t*) client, AllocBuffer, OnClientRead);
-    } else {
-        uv_close((uv_handle_t*) client, NULL);
+        writeData((uv_stream_t*) server, (uv_stream_t*) client, message);
     }
 }
 
-void dapps::RegistryServer::OnClientRead(uv_stream_t *_client, ssize_t nread, const uv_buf_t* buf) {
+void dapps::RegistryServer::OnClientRead(uv_stream_t* _client, ssize_t nread, const uv_buf_t* buf) {
+	// TODO: validate that _this is not null
+	RegistryServer* _this = (RegistryServer*) _client->data;
   if (nread == -1) {
     fprintf(stderr, "error on_client_read");
     uv_close((uv_handle_t*) _client, NULL);
     return;
   }
-  std::cout << "reading client"<<std::endl;
-  std::cout<<buf->base<<std::endl; 
+  std::string str = buf->base;
+  std::cout<<str.c_str()<< "::length::" <<str.length() <<std::endl; 
+  str = dapps::StringUtils::trim(str);
+  //if(str == std::string("hello\r\n"))
+  if(str!= "\r\n")
+  {
+  	std::map<std::string, std::string> testData;
+
+   	testData["hello"] = "Hi";
+	testData["how are you?"] = "I am good, how are you?";
+	
+  	std::string message = testData[str];
+
+  	writeData((uv_stream_t*) _this->m_server, (uv_stream_t*) _client, message);
+  }
 }
 
 void dapps::RegistryServer::AllocBuffer(uv_handle_t* handle,size_t suggested_size,uv_buf_t* buf) {
 	buf->base = (char*) malloc(suggested_size);
 	buf->len = suggested_size;
 }
+
+void dapps::RegistryServer::writeData(uv_stream_t* server, uv_stream_t* _client, std::string message){
+	RegistryServer* _this = (RegistryServer*) server->data;
+	uv_write_t *write_req = (uv_write_t *) malloc(sizeof(uv_write_t));
+	    
+    //std::string message = "hello from server \r\n";
+    // TODO: unallocate buffer on callback.
+    uv_buf_t* buf = (uv_buf_t*)malloc(message.length());
+    buf->len = message.length();
+    buf->base = (char*) malloc(buf->len);
+    std::strcpy(buf->base, message.c_str());
+
+    int buf_count = 1;
+
+    write_req->data = (void*) _this;
+    std::cout<<"going to execute uv_write"<<std::endl;
+    uv_write(write_req, _client, buf, buf_count, onClientWrite);
+}
+
+void dapps::RegistryServer::onClientWrite(uv_write_t *req, int status) {
+	uv_tcp_t *client = (uv_tcp_t*) malloc(sizeof(uv_tcp_t));
+	if (status == -1) {
+		fprintf(stderr, "error on_client_write");
+		uv_close((uv_handle_t*) client, NULL);
+		return;
+	}
+}
+
 
 
 
