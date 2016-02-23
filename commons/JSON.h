@@ -32,7 +32,6 @@ namespace dapps
 			static std::string stringifyInteger(dapps::JSON_t*);
 			static std::string stringifyBoolean(dapps::JSON_t*);
 			static std::string stringifyInvalid(dapps::JSON_t*);
-			static std::string lltostr(int64_t);
 			
 			static JSONValueType getJSONValueType(std::string&, uint64_t&);
 			static JSONParserFunc getParserFunc(std::string&, uint64_t&);

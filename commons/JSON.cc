@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include "JSON.h"
 #include "JSONTypes.h"
+#include "../utilities/StringUtils.h"
 
 dapps::JSON_t* dapps::JSON::parse(std::string input)
 {
@@ -36,6 +37,7 @@ void dapps::JSON::skipWhiteSpace(std::string& input, uint64_t& counter)
 
 dapps::JSON_t* dapps::JSON::parseObject(std::string& input, uint64_t& counter)
 {
+	bool endOfObject = false;
 	char cur = input[counter];
 	if(cur != '{')
 	{
@@ -44,7 +46,8 @@ dapps::JSON_t* dapps::JSON::parseObject(std::string& input, uint64_t& counter)
 	JSONObject* _object = new JSONObject();
 	counter++;
 	skipWhiteSpace(input, counter);
-	do
+	
+	while(input[counter] != '}') // Repeat until end of object.
 	{
 		std::string _key = parseKey(input, counter);
 		
@@ -63,14 +66,22 @@ dapps::JSON_t* dapps::JSON::parseObject(std::string& input, uint64_t& counter)
 		{
 			counter++;
 		}
-		else
+		else if(!endOfObject)
 		{
 			// Mark end of object here.
 			// Otherwise faulty JSONs might 'cause crash.
+			endOfObject = true;
+		}
+		else
+		{
+			// @TODO: throw
+			return NULL;
 		}
 		
 		skipWhiteSpace(input, counter);
-	} while(input[counter] != '}'); // Repeat until end of object.
+	}
+	counter++;
+	skipWhiteSpace(input, counter);
 	
 	JSON_t* _container = new JSON_t();
 	_container->m_type = JSON_t::VALUE_TYPE_OBJECT;
@@ -195,48 +206,6 @@ int64_t dapps::JSON::strtoll(const char* numStr)
 		retVal *= -1;
 	}
 	return retVal;
-}
-
-// @TODO: refactor
-std::string dapps::JSON::lltostr(int64_t integer)
-{
-	if(integer == INT64_C(0))
-	{
-		return "0";
-	}
-	
-	int64_t len = 0;
-	bool isNeg = (integer < 0);
-	int64_t intCopy = integer * (isNeg? -1 : 1);
-	
-	while(intCopy > 0) 
-	{
-		intCopy = intCopy / 10;
-		len++;
-	}
-	intCopy = integer * (isNeg? -1 : 1);
-	char *retCStr = new char[len + (isNeg? 1 : 0) + 1];
-	
-	int i = 0;
-	do
-	{
-		retCStr[i++] = '0' + (intCopy % 10);
-		intCopy = intCopy / 10;
-		
-	} while(intCopy > 0);
-	retCStr[i] = '\0';
-	
-	// Reverse the order.
-	char swapChar;
-	for(i--; i > len / 2; i--)
-	{
-		swapChar = retCStr[i];
-		retCStr[i] = retCStr[len - i -1];
-		retCStr[len - i -1] = swapChar;
-	}
-	std::string retStr = std::string(retCStr);
-	delete retCStr;
-	return (isNeg? "-" : "") + retStr;
 }
 
 // Almost duplicate of parseString. Move commons out.
@@ -439,7 +408,7 @@ std::string dapps::JSON::stringifyFloat(dapps::JSON_t* json)
 	{
 		return "null";
 	}
-	return dtostr(json->m_val.m_floatVal);
+	return StringUtils::toString(json->m_val.m_floatVal);
 }
 
 std::string dapps::JSON::stringifyInteger(dapps::JSON_t* json)
@@ -448,7 +417,7 @@ std::string dapps::JSON::stringifyInteger(dapps::JSON_t* json)
 	{
 		return "null";
 	}
-	return lltostr(json->m_val.m_intVal);
+	return StringUtils::toString(json->m_val.m_intVal);
 }
 
 std::string dapps::JSON::stringifyBoolean(dapps::JSON_t* json)
