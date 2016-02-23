@@ -1,5 +1,6 @@
+#ifndef __dapps_STRING_UTILS__
+#define __dapps_STRING_UTILS__
 #include <string>
-#include <string.h>
 
 namespace dapps
 {
@@ -7,5 +8,10 @@ namespace dapps
 	{
 		public:
 			static std::string trim(std::string);
+			template <typename T> static std::string toString(T& value);
 	};
 }
+
+#include "StringUtils.tcc"
+
+#endif // __dapps_STRING_UTILS__
