@@ -13,7 +13,7 @@ SRCS=dapps.cc \
 	utilities/StringUtils.cc \
 	utilities/LoggingUtil.cc \
 	commons/exceptions/DappsException.cc \
-	registry/ClientSocket.cc
+	registry/ClientSocket.cc \
 	commons/exceptions/JSONParseException.cc
 
 OBJS=$(subst .cc,.o,$(SRCS))
