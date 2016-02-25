@@ -1,8 +1,10 @@
 #ifndef __dapps__
 #define __dapps__
 
+#include "dapps-common.h"
 #include "utilities/ArgsProcessor.h"
 #include "registry/RegistryServer.h"
+#include "utilities/LoggingUtil.h"
 
 namespace dapps
 {
@@ -14,6 +16,7 @@ namespace dapps
 		public:
 			ArgsProcessor* args;
 			RegistryServer* registry;
+			LoggingUtil* loggingUtil;
 	};
 }
 #endif //__dapps__

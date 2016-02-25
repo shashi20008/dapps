@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include "JSON.h"
 #include "JSONTypes.h"
+#include "../utilities/StringUtils.h"
 
 dapps::JSON_t* dapps::JSON::parse(std::string input)
 {
@@ -11,11 +12,11 @@ dapps::JSON_t* dapps::JSON::parse(std::string input)
 	
 	if(input[i] == '{')
 	{
-		parseObject(input, i);
+		return parseObject(input, i);
 	}
 	else if(input[i] == '[')
 	{
-		parseArray(input, i);
+		return parseArray(input, i);
 	}
 	else
 	{
@@ -34,8 +35,9 @@ void dapps::JSON::skipWhiteSpace(std::string& input, uint64_t& counter)
 	}
 }
 
-dapps::JSONObject* dapps::JSON::parseObject(std::string& input, uint64_t& counter)
+dapps::JSON_t* dapps::JSON::parseObject(std::string& input, uint64_t& counter)
 {
+	bool endOfObject = false;
 	char cur = input[counter];
 	if(cur != '{')
 	{
@@ -44,31 +46,18 @@ dapps::JSONObject* dapps::JSON::parseObject(std::string& input, uint64_t& counte
 	JSONObject* _object = new JSONObject();
 	counter++;
 	skipWhiteSpace(input, counter);
-	do
+	
+	while(input[counter] != '}') // Repeat until end of object.
 	{
 		std::string _key = parseKey(input, counter);
 		
-		JSON_t* _val = new JSON_t();
-		if(input[counter] == '{')
-		{
-			_val->m_type = JSON_t::VALUE_TYPE_OBJECT;
-			_val->m_val.m_object = parseObject(input, counter);
+		JSONParserFunc parser = getParserFunc(input, counter);
+		
+		if(parser == NULL) {
+			// Invalid JSON. Throw
+			return NULL;
 		}
-		else if(input[counter] == '[')
-		{
-			_val->m_type = JSON_t::VALUE_TYPE_ARRAY;
-			_val->m_val.m_array = parseArray(input, counter);
-		}
-		else if(input[counter] == '"')
-		{
-			_val->m_type = JSON_t::VALUE_TYPE_STRING;
-			_val->m_val.m_str = parseString(input, counter);
-		}
-		else if((input[counter] >= '0' && input[counter] <= '9') || input[counter] == '-')
-		{
-			delete _val;
-			_val = parseNumber(input, counter);
-		}
+		JSON_t* _val = (*parser) (input, counter);
 		
 		// Put it on the _object
 		_object->insert(JSONPair(_key, _val));
@@ -77,19 +66,31 @@ dapps::JSONObject* dapps::JSON::parseObject(std::string& input, uint64_t& counte
 		{
 			counter++;
 		}
-		else
+		else if(!endOfObject)
 		{
 			// Mark end of object here.
 			// Otherwise faulty JSONs might 'cause crash.
+			endOfObject = true;
+		}
+		else
+		{
+			// @TODO: throw
+			return NULL;
 		}
 		
 		skipWhiteSpace(input, counter);
-	} while(input[counter] != '}'); // Repeat until end of object.
+	}
+	counter++;
+	skipWhiteSpace(input, counter);
 	
-	return _object;
+	JSON_t* _container = new JSON_t();
+	_container->m_type = JSON_t::VALUE_TYPE_OBJECT;
+	_container->m_val.m_object = _object;
+	
+	return _container;
 }
 
-char* dapps::JSON::parseString(std::string& input, uint64_t& counter)
+dapps::JSON_t* dapps::JSON::parseString(std::string& input, uint64_t& counter)
 {
 	if(input[counter] != '"')
 	{
@@ -127,7 +128,10 @@ char* dapps::JSON::parseString(std::string& input, uint64_t& counter)
 	//Cleanup
 	delete strBuffer;
 	
-	return retStr;
+	JSON_t* _container = new JSON_t();
+	_container->m_type = JSON_t::VALUE_TYPE_STRING;
+	_container->m_val.m_str = retStr;
+	return _container;
 }
 
 dapps::JSON_t* dapps::JSON::parseNumber(std::string& input, uint64_t& counter)
@@ -135,7 +139,7 @@ dapps::JSON_t* dapps::JSON::parseNumber(std::string& input, uint64_t& counter)
 	JSON_t* _val = new JSON_t();
 	char cur = input[counter];
 	
-	if((cur <= '0' || cur >= '9') && cur != '-')
+	if((cur < '0' || cur > '9') && cur != '-')
 	{
 		// not a number.
 		// throw
@@ -247,12 +251,185 @@ std::string dapps::JSON::parseKey(std::string& input, uint64_t& counter)
 	return key;
 }
 
-dapps::JSONArray* dapps::JSON::parseArray(std::string& input, uint64_t& counter)
+dapps::JSON_t* dapps::JSON::parseArray(std::string& input, uint64_t& counter)
 {
+	if(input[counter] != '[') {
+		return NULL;
+	}
+	
+	JSONArray* _array = new JSONArray();
+	skipWhiteSpace(input, counter);
+	
+	JSON_t* _container = new JSON_t();
+	_container->m_type = JSON_t::VALUE_TYPE_ARRAY;
+	_container->m_val.m_array = _array;
+	return _container;
+}
+
+dapps::JSONValueType dapps::JSON::getJSONValueType(std::string& input, uint64_t& counter)
+{
+	if(input[counter] == '{')
+	{
+		return JSON_t::VALUE_TYPE_OBJECT;
+	}
+	else if(input[counter] == '[')
+	{
+		return JSON_t::VALUE_TYPE_ARRAY;
+	}
+	else if(input[counter] == '"')
+	{
+		return JSON_t::VALUE_TYPE_STRING;
+	}
+	else if((input[counter] >= '0' && input[counter] <= '9') || input[counter] == '-')
+	{
+		return JSON_t::VALUE_TYPE_INTEGER;
+	}
+	return JSON_t::VALUE_TYPE_INVALID;
+}
+
+dapps::JSONParserFunc dapps::JSON::getParserFunc(std::string& input, uint64_t& counter)
+{
+	if(input[counter] == '{')
+	{
+		return parseObject;
+	}
+	else if(input[counter] == '[')
+	{
+		return parseArray;
+	}
+	else if(input[counter] == '"')
+	{
+		return parseString;
+	}
+	else if((input[counter] >= '0' && input[counter] <= '9') || input[counter] == '-')
+	{
+		return parseNumber;
+	}
 	return NULL;
+}
+
+dapps::JSONStringifierFunc dapps::JSON::getStringifierFunc(dapps::JSON_t* json)
+{
+	if(json == NULL)
+	{
+		return stringifyInvalid;
+	}
+	else if(json->m_type == JSON_t::VALUE_TYPE_ARRAY)
+	{
+		return stringifyArray;
+	}
+	else if(json->m_type == JSON_t::VALUE_TYPE_OBJECT)
+	{
+		return stringifyObject;
+	}
+	else if(json->m_type == JSON_t::VALUE_TYPE_STRING)
+	{
+		return stringifyString;
+	}
+	else if(json->m_type == JSON_t::VALUE_TYPE_FLOAT)
+	{
+		return stringifyFloat;
+	}
+	else if(json->m_type == JSON_t::VALUE_TYPE_INTEGER)
+	{
+		return stringifyInteger;
+	} 
+	else if(json->m_type == JSON_t::VALUE_TYPE_BOOLEAN)
+	{
+		return stringifyBoolean;
+	}
+	return stringifyInvalid;
 }
 
 std::string dapps::JSON::stringify(dapps::JSON_t* json)
 {
-	return "";
+	std::string _json;
+	_json = getStringifierFunc(json)(json);
+	return _json;
+}
+
+std::string dapps::JSON::stringifyObject(dapps::JSON_t* json)
+{
+	std::string retStr = "null";
+	if(json->m_type != JSON_t::VALUE_TYPE_OBJECT)
+	{
+		return retStr;
+	}
+	JSONObject* object = json->m_val.m_object;
+	if(object == NULL) 
+	{
+		return retStr;
+	}
+	JSONObject::iterator it = object->begin();
+	retStr = "{}";
+	if(it == object->end())
+	{
+		return retStr;
+	}
+	
+	retStr = "{";
+	do
+	{
+		retStr += "\"" + it->first +"\":";
+		retStr += getStringifierFunc(it->second)(it->second);
+		retStr += ",";
+		it++;
+	} while(it != object->end());
+	// to remove last comma
+	retStr = retStr.substr(0, retStr.length() - 1);
+	retStr += "}";
+	return retStr;
+}
+
+std::string dapps::JSON::stringifyArray(dapps::JSON_t* json)
+{
+	if(json->m_type != JSON_t::VALUE_TYPE_ARRAY)
+	{
+		return "null";
+	}
+	return "null";
+}
+
+std::string dapps::JSON::stringifyString(dapps::JSON_t* json)
+{
+	if(json->m_type != JSON_t::VALUE_TYPE_STRING) 
+	{
+		return "null";
+	}
+	std::string retStr = "\"";
+	retStr += std::string(json->m_val.m_str);
+	retStr += "\"";
+	return retStr;
+}
+
+std::string dapps::JSON::stringifyFloat(dapps::JSON_t* json)
+{
+	if(json->m_type != JSON_t::VALUE_TYPE_FLOAT)
+	{
+		return "null";
+	}
+	return StringUtils::toString(json->m_val.m_floatVal);
+}
+
+std::string dapps::JSON::stringifyInteger(dapps::JSON_t* json)
+{
+	if(json->m_type != JSON_t::VALUE_TYPE_INTEGER)
+	{
+		return "null";
+	}
+	return StringUtils::toString(json->m_val.m_intVal);
+}
+
+std::string dapps::JSON::stringifyBoolean(dapps::JSON_t* json)
+{
+	if(json->m_type != JSON_t::VALUE_TYPE_BOOLEAN)
+	{
+		return "null";
+	}
+	return (json->m_val.m_bool?"true":"false");
+}
+
+std::string dapps::JSON::stringifyInvalid(dapps::JSON_t* json)
+{
+	return "null";
 }

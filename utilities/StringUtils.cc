@@ -1,5 +1,4 @@
 #include "StringUtils.h"
-#include <iostream>
 
 std::string dapps::StringUtils::trim(std::string strToTrim)
 {
@@ -22,3 +21,4 @@ std::string dapps::StringUtils::trim(std::string strToTrim)
 	}
 	return strToTrim;
 }
+
