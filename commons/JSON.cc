@@ -4,6 +4,7 @@
 #include "JSON.h"
 #include "JSONTypes.h"
 #include "../utilities/StringUtils.h"
+#include "exceptions/JSONParseException.h"
 
 dapps::JSON_t* dapps::JSON::parse(std::string input)
 {
@@ -20,7 +21,7 @@ dapps::JSON_t* dapps::JSON::parse(std::string input)
 	}
 	else
 	{
-		//throw
+		throw new JSONParseException("Invalid JSON object");
 	}
 	return NULL;
 }
@@ -41,7 +42,7 @@ dapps::JSON_t* dapps::JSON::parseObject(std::string& input, uint64_t& counter)
 	char cur = input[counter];
 	if(cur != '{')
 	{
-		return NULL;
+		throw new JSONParseException("Invalid JSON object");
 	}
 	JSONObject* _object = new JSONObject();
 	counter++;
@@ -55,7 +56,7 @@ dapps::JSON_t* dapps::JSON::parseObject(std::string& input, uint64_t& counter)
 		
 		if(parser == NULL) {
 			// Invalid JSON. Throw
-			return NULL;
+			throw new JSONParseException("Invalid JSON object");
 		}
 		JSON_t* _val = (*parser) (input, counter);
 		
@@ -75,7 +76,7 @@ dapps::JSON_t* dapps::JSON::parseObject(std::string& input, uint64_t& counter)
 		else
 		{
 			// @TODO: throw
-			return NULL;
+			throw new JSONParseException("Invalid JSON object");
 		}
 		
 		skipWhiteSpace(input, counter);
@@ -95,7 +96,7 @@ dapps::JSON_t* dapps::JSON::parseString(std::string& input, uint64_t& counter)
 	if(input[counter] != '"')
 	{
 		// throw instead.
-		return NULL;
+		throw new JSONParseException("Invalid JSON object");
 	}
 	std::string str = "";
 	char* strBuffer = new char[101];
@@ -143,7 +144,7 @@ dapps::JSON_t* dapps::JSON::parseNumber(std::string& input, uint64_t& counter)
 	{
 		// not a number.
 		// throw
-		return NULL;
+		throw new JSONParseException("Invalid JSON object");
 	}
 	std::string numStr = "";
 	char* numBuffer = new char[101];
@@ -213,7 +214,7 @@ std::string dapps::JSON::parseKey(std::string& input, uint64_t& counter)
 {
 	if(input[counter] != '"')
 	{
-		return NULL;
+		throw new JSONParseException("Invalid JSON object");
 	}
 	std::string key = "";
 	char* keyBuffer = new char[101];
@@ -240,7 +241,7 @@ std::string dapps::JSON::parseKey(std::string& input, uint64_t& counter)
 	skipWhiteSpace(input, counter);
 	if(input[counter] != ':')
 	{
-		return NULL;
+		throw new JSONParseException("Invalid JSON object");
 	}
 	counter++;
 	skipWhiteSpace(input, counter);
@@ -254,7 +255,7 @@ std::string dapps::JSON::parseKey(std::string& input, uint64_t& counter)
 dapps::JSON_t* dapps::JSON::parseArray(std::string& input, uint64_t& counter)
 {
 	if(input[counter] != '[') {
-		return NULL;
+		throw new JSONParseException("Invalid JSON object");
 	}
 	
 	JSONArray* _array = new JSONArray();
