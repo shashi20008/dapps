@@ -23,7 +23,13 @@ dapps::ClientSocket::~ClientSocket() {
 }
 
 void dapps::ClientSocket::onClientRead(uv_stream_t* _client, ssize_t nread, const uv_buf_t* buf) {
-	// TODO: validate that _this is not null
+	if(nread == 0)
+	{
+		std::cout << "client closed the connection. This object can safely be discarded." << std::endl;
+		// @TODO: Find if we still need to call uv_close.
+		return;
+	}
+	
 	ClientSocket* _this = (ClientSocket*)((DappsContext*) _client->data)->getThis();
 	if (nread == -1) {
 		fprintf(stderr, "error on_client_read");
@@ -35,7 +41,7 @@ void dapps::ClientSocket::onClientRead(uv_stream_t* _client, ssize_t nread, cons
 	
 	_this->m_stringBuffer->append(str);
 
-	if(str.find("\r\n\r\n") != std::string::npos)
+	if(_this->m_stringBuffer->find("\r\n\r\n") == _this->m_stringBuffer->length() - 4)
 	{
 		std::cout << "done:: " << _this->m_stringBuffer->c_str() << std::endl;
 	}
