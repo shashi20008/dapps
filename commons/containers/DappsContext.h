@@ -1,5 +1,5 @@
-#ifndef __dapps_UV_CONTAINERS__
-#define __dapps_UV_CONTAINERS__
+#ifndef __dapps_DAPPS_CONTEXT__
+#define __dapps_DAPPS_CONTEXT__
 #include <map>
 #include <string>
 
@@ -22,4 +22,4 @@ namespace dapps
 	};
 }
 
-#endif //__dapps_UV_CONTAINERS__
+#endif //__dapps_DAPPS_CONTEXT__
