@@ -1,4 +1,4 @@
-#include "UVContainers.h"
+#include "DappsContext.h"
 #include "../exceptions/DappsException.h"
 
 dapps::DappsContext::DappsContext(void* dappsObject)
