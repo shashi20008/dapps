@@ -23,12 +23,12 @@ namespace dapps
 		public:
 			RegistryServer(Dapps* );
 			~RegistryServer();
-			void ServerSetup();
-			static void writeData(uv_stream_t*, uv_stream_t*, std::string);
-			static void OnNewConnection(uv_stream_t*, int);
-			static void OnClientRead(uv_stream_t*, ssize_t , const uv_buf_t*);
-			static void onClientWrite(uv_write_t*, int);
-			static void AllocBuffer(uv_handle_t*, size_t, uv_buf_t*);
+			void serverSetup();
+			static void onNewConnection(uv_stream_t*, int);
+			Dapps* getApp();
+			uv_loop_t* getLoop();
+			uv_tcp_t* getServer();
+
 	};
 }
 #endif //__RegistryServer__

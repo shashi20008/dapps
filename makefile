@@ -12,7 +12,8 @@ SRCS=dapps.cc \
 	registry/RegistryServer.cc \
 	utilities/StringUtils.cc \
 	utilities/LoggingUtil.cc \
-	commons/exceptions/DappsException.cc
+	commons/exceptions/DappsException.cc \
+	registry/ClientSocket.cc
 
 OBJS=$(subst .cc,.o,$(SRCS))
 
