@@ -6,9 +6,6 @@
 #include <stdlib.h>
 #include <uv.h>
 #include <fstream>
-// #include <string>
-// #include <map>
-// #include <vector>
 
 namespace dapps
 {
