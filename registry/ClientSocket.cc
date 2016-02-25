@@ -4,11 +4,14 @@
 
 dapps::ClientSocket::ClientSocket(dapps::RegistryServer* _registryServer) 
 {
+	m_context = new DappsContext(this);
+	
 	m_registryServer = _registryServer;
 	m_client = (uv_tcp_t*) malloc(sizeof(uv_tcp_t));
 	m_stringBuffer = new std::string();
 
-	m_client->data = (void*) this;
+	m_client->data = m_context;
+	
 	uv_tcp_init(m_registryServer->getLoop(), m_client);
 	if (uv_accept((uv_stream_t*) m_registryServer->getServer(), (uv_stream_t*) m_client) == 0) {
 		uv_read_start((uv_stream_t*) m_client, allocBuffer, onClientRead);
@@ -21,7 +24,7 @@ dapps::ClientSocket::~ClientSocket() {
 
 void dapps::ClientSocket::onClientRead(uv_stream_t* _client, ssize_t nread, const uv_buf_t* buf) {
 	// TODO: validate that _this is not null
-	ClientSocket* _this = (ClientSocket*) _client->data;
+	ClientSocket* _this = (ClientSocket*)((DappsContext*) _client->data)->getThis();
 	if (nread == -1) {
 		fprintf(stderr, "error on_client_read");
 		uv_close((uv_handle_t*) _client, NULL);
@@ -29,7 +32,7 @@ void dapps::ClientSocket::onClientRead(uv_stream_t* _client, ssize_t nread, cons
 	}
 	std::string str = buf->base;
 	std::cout<<str.c_str()<< "::length::" <<str.length() <<std::endl; 
-	//str = dapps::StringUtils::trim(str);
+	
 	_this->m_stringBuffer->append(str);
 
 	if(str.find("\r\n\r\n") != std::string::npos)

@@ -8,12 +8,14 @@
 #include <uv.h>
 #include <fstream>
 #include "RegistryServer.h"
+#include "../commons/containers/DappsContext.h"
 
 namespace dapps
 {
 	class ClientSocket
 	{
 		private:
+			DappsContext* m_context;
 			uv_tcp_t* m_client;
 			RegistryServer* m_registryServer;
 			std::string* m_stringBuffer;
