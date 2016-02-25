@@ -16,6 +16,7 @@ namespace dapps
 		private:
 			uv_tcp_t* m_client;
 			RegistryServer* m_registryServer;
+			std::string* m_stringBuffer;
 		public:
 			ClientSocket(RegistryServer*);
 			~ClientSocket();

@@ -6,13 +6,12 @@ dapps::ClientSocket::ClientSocket(dapps::RegistryServer* _registryServer)
 {
 	m_registryServer = _registryServer;
 	m_client = (uv_tcp_t*) malloc(sizeof(uv_tcp_t));
+	m_stringBuffer = new std::string();
 
 	m_client->data = (void*) this;
-	std::string message = "Hello from Server!";
 	uv_tcp_init(m_registryServer->getLoop(), m_client);
 	if (uv_accept((uv_stream_t*) m_registryServer->getServer(), (uv_stream_t*) m_client) == 0) {
 		uv_read_start((uv_stream_t*) m_client, allocBuffer, onClientRead);
-		writeData((uv_stream_t*) m_registryServer->getServer(), (uv_stream_t*) m_client, message);
 	}
 }
 
@@ -30,18 +29,12 @@ void dapps::ClientSocket::onClientRead(uv_stream_t* _client, ssize_t nread, cons
 	}
 	std::string str = buf->base;
 	std::cout<<str.c_str()<< "::length::" <<str.length() <<std::endl; 
-	str = dapps::StringUtils::trim(str);
-	//if(str == std::string("hello\r\n"))
-	if(str!= "\r\n")
+	//str = dapps::StringUtils::trim(str);
+	_this->m_stringBuffer->append(str);
+
+	if(str.find("\r\n\r\n") != std::string::npos)
 	{
-		std::map<std::string, std::string> testData;
-
-		testData["hello"] = "Hi";
-		testData["how are you?"] = "I am good, how are you?";
-
-		std::string message = testData[str];
-
-		writeData((uv_stream_t*) _this->m_registryServer->getServer(), (uv_stream_t*) _client, message);
+		std::cout << "done:: " << _this->m_stringBuffer->c_str() << std::endl;
 	}
 }
 
