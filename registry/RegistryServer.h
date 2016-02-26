@@ -27,7 +27,9 @@ namespace dapps
 			RegistryServer(Dapps* );
 			~RegistryServer();
 			void serverSetup();
+			static void rejectIncomingConnection(uv_stream_t* server);
 			static void onNewConnection(uv_stream_t*, int);
+			static void onRejectConnection(uv_handle_t*);
 			Dapps* getApp();
 			uv_loop_t* getLoop();
 			uv_tcp_t* getServer();
