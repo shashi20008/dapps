@@ -4,6 +4,7 @@
 dapps::RegistryServer::RegistryServer(dapps::Dapps* _app) 
 {
 	this->m_app = _app;
+	this->m_logger = m_app->loggingUtil;
 	serverSetup();
 }
 

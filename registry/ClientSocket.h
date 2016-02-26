@@ -9,11 +9,15 @@
 #include <fstream>
 #include "RegistryServer.h"
 #include "../commons/containers/DappsContext.h"
+#include "../utilities/LoggingUtil.h"
 
 namespace dapps
 {
 	class ClientSocket
 	{
+		public:
+			LoggingUtil* m_logger;
+			
 		private:
 			DappsContext* m_context;
 			uv_tcp_t* m_client;
