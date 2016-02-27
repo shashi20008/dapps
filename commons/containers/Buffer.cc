@@ -27,7 +27,7 @@ dapps::Buffer* dapps::Buffer::append(char* str)
 	return append(str, length);
 }
 
-Buffer* append(char* str, std::size_t length, std::size_t loc)
+dapps::Buffer* dapps::Buffer::append(const char* str, std::size_t length, std::size_t loc)
 {
 	ensureCapacity(m_loc + length);
 	std::size_t endLoc = loc + length;
@@ -38,10 +38,12 @@ Buffer* append(char* str, std::size_t length, std::size_t loc)
 		loc++;
 	}
 	m_value[m_loc] = '\0';
+	return this;
 }
 
 dapps::Buffer* dapps::Buffer::append(char ch)
 {
+	return append(&ch, 1);
 }
 
 std::string dapps::Buffer::str()
@@ -57,7 +59,7 @@ const char* dapps::Buffer::c_str()
 
 char* dapps::Buffer::c_strCopy()
 {
-	char* retCStr = new char[m_length + 1];
+	char* retCStr = new char[m_loc + 1];
 	return copyTo(retCStr);
 }
 
@@ -89,4 +91,5 @@ char* dapps::Buffer::copyTo(char* newVal)
 		newVal[itr] = m_value[itr];
 	}
 	newVal[itr] = '\0';
+	return newVal;
 }

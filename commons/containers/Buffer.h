@@ -1,9 +1,9 @@
 #ifndef __dapps_BUFFER__
 #define __dapps_BUFFER__
 
-#define DAPPS_BUFFER_INITIAL_SIZE 1024
+#define DAPPS_BUFFER_INITIAL_SIZE 1024 
 
-#incldue <string>
+#include <string>
 #include <cstddef>
 
 namespace dapps
@@ -24,7 +24,7 @@ namespace dapps
 			~Buffer();
 			Buffer* append(std::string);
 			Buffer* append(char*);
-			Buffer* append(char*, std::size_t, std::size_t start = 0);
+			Buffer* append(const char*, std::size_t, std::size_t start = 0);
 			Buffer* append(char);
 			std::string str();
 			const char* c_str();
