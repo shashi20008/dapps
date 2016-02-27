@@ -1,6 +1,6 @@
 #include "HttpSocket.h"
 
-dapps::HttpSocket::HttpSocket(dapps::DappsContext* _context) // Pipeline is not complete here. We need more params
+dapps::HttpSocket::HttpSocket(dapps::DappsContext* _context, AbstractClientSocket* _socket, AbstractHttpClient* _client)
 {
 	m_requestHeaders = NULL;
 	m_parseComplete = false;
@@ -10,6 +10,8 @@ dapps::HttpSocket::HttpSocket(dapps::DappsContext* _context) // Pipeline is not 
 	m_responseTrailers = NULL;
 	
 	m_context = _context;
+	m_socket = _socket;
+	m_client = _client;
 }
 
 dapps::HttpHeadersMap* dapps::HttpSocket::getRequestHeaders()

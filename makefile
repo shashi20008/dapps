@@ -17,7 +17,9 @@ SRCS=dapps.cc \
 	commons/exceptions/JSONParseException.cc \
 	commons/containers/DappsContext.cc \
 	commons/containers/Buffer.cc \
-	commons/http/HttpSocket.cc 
+	commons/http/HttpSocket.cc \
+	commons/http/AbstractHttpClient.cc \
+	commons/sockets/AbstractClientSocket.cc
 
 OBJS=$(subst .cc,.o,$(SRCS))
 

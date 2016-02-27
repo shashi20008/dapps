@@ -6,6 +6,8 @@
 #include "../containers/Buffer.h"
 #include "../containers/DappsContext.h"
 #include "../JSONTypes.h"
+#include "AbstractHttpClient.h"
+#include "../sockets/AbstractClientSocket.h"
 
 namespace dapps
 {
@@ -28,9 +30,11 @@ namespace dapps
 			Buffer m_responseBody;
 			
 			DappsContext* m_context;
+			AbstractClientSocket* m_socket;
+			AbstractHttpClient* m_client;
 		
 		public:
-			HttpSocket(DappsContext*);
+			HttpSocket(DappsContext*, AbstractClientSocket*, AbstractHttpClient*);
 			HttpHeadersMap* getRequestHeaders();
 			std::string getRequestHeader(std::string);
 			Buffer getRequestBody();
