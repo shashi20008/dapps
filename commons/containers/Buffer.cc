@@ -14,10 +14,30 @@ dapps::Buffer::~Buffer()
 
 dapps::Buffer* dapps::Buffer::append(std::string str)
 {
+	return append(str.c_str(), str.length());
 }
 
 dapps::Buffer* dapps::Buffer::append(char* str)
 {
+	std::size_t length = 0;
+	while(*str)
+	{
+		length++;
+	}
+	return append(str, length);
+}
+
+Buffer* append(char* str, std::size_t length, std::size_t loc)
+{
+	ensureCapacity(m_loc + length);
+	std::size_t endLoc = loc + length;
+	while(loc < endLoc)
+	{
+		m_value[m_loc] = str[loc];
+		m_loc++;
+		loc++;
+	}
+	m_value[m_loc] = '\0';
 }
 
 dapps::Buffer* dapps::Buffer::append(char ch)

@@ -24,6 +24,7 @@ namespace dapps
 			~Buffer();
 			Buffer* append(std::string);
 			Buffer* append(char*);
+			Buffer* append(char*, std::size_t, std::size_t start = 0);
 			Buffer* append(char);
 			std::string str();
 			const char* c_str();
