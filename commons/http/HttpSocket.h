@@ -3,6 +3,9 @@
 
 #include <map>
 #include <string>
+#include "../containers/Buffer.h"
+#include "../containers/DappsContext.h"
+#include "../JSONTypes.h"
 
 namespace dapps
 {
@@ -12,12 +15,43 @@ namespace dapps
 	class HttpSocket
 	{
 		private:
-			HttpHeadersMap* m_headers;
-			HttpHeadersMap* m_trailers;
-			std::string m_body;
-			std::string m_httpMethod;
-			std::string m_path;
+			HttpHeadersMap* m_requestHeaders;
+			Buffer m_requestBody;
+			std::string m_requestMethod;
+			std::string m_requestPath;
 			std::string m_httpVersion;
+			bool m_parseComplete;
+			bool m_headersParsed;
+			
+			HttpHeadersMap* m_responseHeaders;
+			HttpHeadersMap* m_responseTrailers;
+			Buffer m_responseBody;
+			
+			DappsContext* m_context;
+		
+		public:
+			HttpSocket(DappsContext*);
+			HttpHeadersMap* getRequestHeaders();
+			std::string getRequestHeader(std::string);
+			Buffer getRequestBody();
+			JSON_t* getRequestBodyJson();
+			
+			HttpSocket* setResponseHeaders(HttpHeadersMap*);
+			HttpSocket* setResponseHeader(std::string, std::string);
+			HttpSocket* setResponseTrailers(HttpHeadersMap*);
+			HttpSocket* setResponseTrailer(std::string, std::string);
+			HttpSocket* setResponseBody(Buffer);
+			HttpSocket* setResponseBody(JSON_t*);
+			HttpHeadersMap* getResponseHeaders();
+			std::string getResponseHeader(std::string);
+			HttpHeadersMap* getResponseTrailers();
+			std::string getResponseTrailer(std::string);
+			Buffer getResponseBody();
+			JSON_t* getResponseBodyJson();
+			
+			bool isHeadersParsed();
+			bool isParsingComplete();
+			void write();
 	};
 }
 
