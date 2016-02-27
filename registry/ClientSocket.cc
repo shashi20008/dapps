@@ -24,6 +24,10 @@ dapps::ClientSocket::~ClientSocket() {
 	std::cout << "ClientSocket destructor executed" << std::endl;
 }
 
+void dapps::ClientSocket::write(char* buffer)
+{
+}
+
 void dapps::ClientSocket::onClientRead(uv_stream_t* _client, ssize_t nread, const uv_buf_t* buf) {
 	if(nread == 0)
 	{
