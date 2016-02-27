@@ -15,7 +15,8 @@ namespace dapps
 			std::size_t m_size;
 			std::size_t m_loc; // Location of last byte in buffer
 			
-			void resize(std::size_t newSize);
+			Buffer* ensureCapacity(std::size_t capacity);
+			Buffer* resize(std::size_t newSize);
 			char* copyTo(char*);
 		
 		public:
