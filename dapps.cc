@@ -1,5 +1,5 @@
 #include "dapps.h"
-#include "commons/JSON.h"
+#include "commons/json/JSON.h"
 
 using namespace dapps;
 

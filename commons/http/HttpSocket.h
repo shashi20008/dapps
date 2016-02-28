@@ -5,7 +5,7 @@
 #include <string>
 #include "../containers/Buffer.h"
 #include "../containers/DappsContext.h"
-#include "../JSONTypes.h"
+#include "../containers/JSONTypes.h"
 #include "AbstractHttpClient.h"
 #include "../sockets/AbstractClientSocket.h"
 

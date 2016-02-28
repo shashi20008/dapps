@@ -7,8 +7,8 @@ LDLIBS=-luv
 
 SRCS=dapps.cc \
 	utilities/ArgsProcessor.cc \
-	commons/JSON.cc \
-	commons/JSONTypes.cc \
+	commons/json/JSON.cc \
+	commons/containers/JSONTypes.cc \
 	registry/RegistryServer.cc \
 	utilities/StringUtils.cc \
 	utilities/LoggingUtil.cc \

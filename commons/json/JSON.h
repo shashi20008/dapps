@@ -4,7 +4,7 @@
 #include <string>
 #include <stdint.h>
 
-#include "JSONTypes.h"
+#include "../containers/JSONTypes.h"
 
 namespace dapps
 {
