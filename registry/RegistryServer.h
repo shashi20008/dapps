@@ -8,7 +8,7 @@
 #include <uv.h>
 #include <fstream>
 #include "../dapps.h"
-#include "../utilities/LoggingUtil.h"
+#include "../commons/utilities/LoggingUtil.h"
 
 namespace dapps
 {

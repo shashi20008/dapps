@@ -11,7 +11,7 @@
 #include "../commons/sockets/AbstractClientSocket.h"
 #include "../commons/containers/DappsContext.h"
 #include "../commons/http/HttpSocket.h"
-#include "../utilities/LoggingUtil.h"
+#include "../commons/utilities/LoggingUtil.h"
 
 namespace dapps
 {

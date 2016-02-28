@@ -11,7 +11,7 @@ SRCS=dapps.cc \
 	commons/containers/JSONTypes.cc \
 	registry/RegistryServer.cc \
 	commons/utilities/StringUtils.cc \
-	utilities/LoggingUtil.cc \
+	commons/utilities/LoggingUtil.cc \
 	commons/exceptions/DappsException.cc \
 	registry/ClientSocket.cc \
 	commons/exceptions/JSONParseException.cc \
