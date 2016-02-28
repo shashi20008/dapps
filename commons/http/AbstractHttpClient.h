@@ -1,7 +1,7 @@
 #ifndef __dapps_ABSTRACT_HTTP_CLIENT__
 #define __dapps_ABSTRACT_HTTP_CLIENT__
 
-#include "../../dapps-common.h"
+#include "../dapps-commons.h"
 #include "HttpSocket.h"
 
 namespace dapps

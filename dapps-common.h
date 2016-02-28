@@ -9,10 +9,5 @@ namespace dapps
 	class LoggingUtil;
 	class StringUtils;
 	class ArgsProcessor;
-	
-	// From Commons
-	class AbstractHttpClient;
-	class AbstractClientSocket;
-	class HttpSocket;
 }
 #endif //__dapps_COMMON__
