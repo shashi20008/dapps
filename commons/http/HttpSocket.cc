@@ -109,6 +109,14 @@ bool dapps::HttpSocket::isParsingComplete()
 	return m_parseComplete;
 }
 
+void feed(std::string)
+{
+}
+
+void feed(char*)
+{
+}
+
 void write()
 {
 }

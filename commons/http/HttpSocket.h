@@ -55,6 +55,8 @@ namespace dapps
 			
 			bool isHeadersParsed();
 			bool isParsingComplete();
+			void feed(std::string);
+			void feed(char*);
 			void write();
 	};
 }
