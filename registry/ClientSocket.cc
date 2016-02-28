@@ -5,6 +5,7 @@
 dapps::ClientSocket::ClientSocket(dapps::RegistryServer* _registryServer) 
 {
 	m_context = new DappsContext(this);
+	m_httpSocket =  new HttpSocket(m_context, this , NULL);
 	
 	m_registryServer = _registryServer;
 	m_logger = m_registryServer->m_logger;
@@ -42,15 +43,7 @@ void dapps::ClientSocket::onClientRead(uv_stream_t* _client, ssize_t nread, cons
 		uv_close((uv_handle_t*) _client, NULL);
 		return;
 	}
-	std::string str = buf->base;
-	std::cout<<str.c_str()<< "::length::" <<str.length() <<std::endl; 
-	
-	_this->m_stringBuffer->append(str);
-
-	if(_this->m_stringBuffer->find("\r\n\r\n") == _this->m_stringBuffer->length() - 4)
-	{
-		std::cout << "done:: " << _this->m_stringBuffer->c_str() << std::endl;
-	}
+	_this->m_httpSocket->feed(buf->base, nread);
 }
 
 void dapps::ClientSocket::allocBuffer(uv_handle_t* handle,size_t suggested_size,uv_buf_t* buf) {
