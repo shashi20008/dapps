@@ -5,6 +5,7 @@
 
 #include <string>
 #include <cstddef>
+#include "../exceptions/OutOfBoundsException.h"
 
 namespace dapps
 {
@@ -33,6 +34,7 @@ namespace dapps
 			// operators
 			Buffer(const Buffer&);
 			Buffer& operator=(const Buffer&);
+			char& operator[](std::size_t);
 	};
 }
 

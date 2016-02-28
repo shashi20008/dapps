@@ -13,8 +13,9 @@ SRCS=dapps.cc \
 	commons/utilities/StringUtils.cc \
 	commons/utilities/LoggingUtil.cc \
 	commons/exceptions/DappsException.cc \
-	registry/ClientSocket.cc \
 	commons/exceptions/JSONParseException.cc \
+	commons/exceptions/OutOfBoundsException.cc \
+	registry/ClientSocket.cc \
 	commons/containers/DappsContext.cc \
 	commons/containers/Buffer.cc \
 	commons/http/HttpSocket.cc \
