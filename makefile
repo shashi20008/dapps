@@ -10,7 +10,7 @@ SRCS=dapps.cc \
 	commons/json/JSON.cc \
 	commons/containers/JSONTypes.cc \
 	registry/RegistryServer.cc \
-	utilities/StringUtils.cc \
+	commons/utilities/StringUtils.cc \
 	utilities/LoggingUtil.cc \
 	commons/exceptions/DappsException.cc \
 	registry/ClientSocket.cc \

@@ -1,5 +1,5 @@
 #include "ClientSocket.h"
-#include "../utilities/StringUtils.h"
+#include "../commons/utilities/StringUtils.h"
 #include <map>
 
 dapps::ClientSocket::ClientSocket(dapps::RegistryServer* _registryServer) 

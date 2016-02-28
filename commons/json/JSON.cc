@@ -2,7 +2,7 @@
 #include <cstring>
 #include <cstdlib>
 #include "JSON.h"
-#include "../../utilities/StringUtils.h"
+#include "../utilities/StringUtils.h"
 #include "../exceptions/JSONParseException.h"
 
 dapps::JSON_t* dapps::JSON::parse(std::string input)
