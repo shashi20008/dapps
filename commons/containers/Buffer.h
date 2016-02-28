@@ -29,6 +29,10 @@ namespace dapps
 			std::string str();
 			const char* c_str();
 			char* c_strCopy();
+			
+			// operators
+			Buffer(const Buffer&);
+			Buffer& operator=(const Buffer&);
 	};
 }
 
