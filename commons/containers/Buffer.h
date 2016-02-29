@@ -5,6 +5,7 @@
 
 #include <string>
 #include <cstddef>
+#include "../exceptions/OutOfBoundsException.h"
 
 namespace dapps
 {
@@ -29,6 +30,11 @@ namespace dapps
 			std::string str();
 			const char* c_str();
 			char* c_strCopy();
+			
+			// operators
+			Buffer(const Buffer&);
+			Buffer& operator=(const Buffer&);
+			char& operator[](std::size_t);
 	};
 }
 

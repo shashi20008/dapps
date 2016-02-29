@@ -63,6 +63,43 @@ char* dapps::Buffer::c_strCopy()
 	return copyTo(retCStr);
 }
 
+dapps::Buffer::Buffer(const Buffer& source)
+{
+	m_size = source.m_size;
+	m_loc = source.m_loc;
+	m_value = new char[m_size];
+	for(std::size_t i = 0; i < m_loc; i++)
+	{
+		m_value[i] = source.m_value[i];
+	}
+}
+
+dapps::Buffer& dapps::Buffer::operator=(const Buffer& source)
+{
+	if(this == &source)
+	{
+		return *this;
+	}
+	m_size = source.m_size;
+	m_loc = source.m_loc;
+	m_value = new char[m_size];
+	for(std::size_t i = 0; i <= m_loc; i++)
+	{
+		m_value[i] = source.m_value[i];
+	}
+	return *this;
+}
+
+char& dapps::Buffer::operator[](std::size_t index)
+{
+	if(index < 0 || index >= m_loc)
+	{
+		//@TODO: Throw instead. This is gonna cry in assignment.
+		throw OutOfBoundsException("Invalid index access in Buffer");
+	}
+	return m_value[index];
+}
+
 // Privates
 
 dapps::Buffer* dapps::Buffer::ensureCapacity(std::size_t capacity)

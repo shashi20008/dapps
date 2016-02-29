@@ -6,15 +6,17 @@ LDFLAGS=
 LDLIBS=-luv
 
 SRCS=dapps.cc \
+	registry/RegistryServer.cc \
+	registry/ClientSocket.cc \
+	registry/RegistryRequestProcessor.cc \
 	utilities/ArgsProcessor.cc \
 	commons/json/JSON.cc \
 	commons/containers/JSONTypes.cc \
-	registry/RegistryServer.cc \
 	commons/utilities/StringUtils.cc \
 	commons/utilities/LoggingUtil.cc \
 	commons/exceptions/DappsException.cc \
-	registry/ClientSocket.cc \
 	commons/exceptions/JSONParseException.cc \
+	commons/exceptions/OutOfBoundsException.cc \
 	commons/containers/DappsContext.cc \
 	commons/containers/Buffer.cc \
 	commons/http/HttpSocket.cc \
