@@ -3,16 +3,19 @@
 
 #include <map>
 #include <string>
+#include <iostream>
+#include <vector>
 #include "../containers/Buffer.h"
 #include "../containers/DappsContext.h"
 #include "../containers/JSONTypes.h"
 #include "AbstractHttpClient.h"
 #include "../sockets/AbstractClientSocket.h"
+#include "../utilities/StringUtils.h"
 
 namespace dapps
 {
 	typedef std::map<std::string, std::string> HttpHeadersMap;
-	typedef std::map<std::string, std::string> HttpHeader;
+	typedef std::pair<std::string, std::string> HttpHeader;
 	
 	class HttpSocket
 	{
@@ -24,6 +27,7 @@ namespace dapps
 			std::string m_httpVersion;
 			bool m_parseComplete;
 			bool m_headersParsed;
+			bool m_commandParsed;
 			
 			HttpHeadersMap* m_responseHeaders;
 			HttpHeadersMap* m_responseTrailers;
@@ -54,10 +58,14 @@ namespace dapps
 			JSON_t* getResponseBodyJson();
 			
 			bool isHeadersParsed();
+			bool isCommandParsed();
 			bool isParsingComplete();
 			void feed(std::string);
-			void feed(char*);
+			void feed(const char*, ssize_t);
 			void write();
+
+			void parseCommand(std::string);
+			void parseHeaders(std::string);
 	};
 }
 
