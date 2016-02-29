@@ -22,3 +22,18 @@ std::string dapps::StringUtils::trim(std::string strToTrim)
 	return strToTrim;
 }
 
+std::vector<std::string> dapps::StringUtils::split(std::string strToSplit, char separator)
+{
+	std::vector<std::string> stringVector;
+	int ePos;
+    strToSplit = strToSplit + separator;
+
+	while(!strToSplit.empty())
+	{
+		ePos = strToSplit.find(separator);
+		stringVector.push_back(strToSplit.substr(0, ePos));
+		strToSplit = strToSplit.substr(ePos+1, strToSplit.length());
+	}
+
+	return stringVector;
+}
