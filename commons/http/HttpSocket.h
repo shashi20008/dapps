@@ -28,6 +28,8 @@ namespace dapps
 			bool m_parseComplete;
 			bool m_headersParsed;
 			bool m_commandParsed;
+			bool m_bodyPresent;
+			int m_contentLength;
 			
 			HttpHeadersMap* m_responseHeaders;
 			HttpHeadersMap* m_responseTrailers;

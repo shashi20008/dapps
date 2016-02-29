@@ -34,6 +34,23 @@ std::vector<std::string> dapps::StringUtils::split(std::string strToSplit, char 
 		stringVector.push_back(strToSplit.substr(0, ePos));
 		strToSplit = strToSplit.substr(ePos+1, strToSplit.length());
 	}
-
 	return stringVector;
+}
+
+std::string dapps::StringUtils::toUpperCase(std::string strToUpper)
+{
+	for( int i = 0; i < strToUpper.length(); i++)
+	{
+		strToUpper[i] = toupper(strToUpper[i]);
+	}
+	return strToUpper;
+}
+
+std::string dapps::StringUtils::toLowerCase(std::string strToLower)
+{
+	for( int i = 0; i < strToLower.length(); i++)
+	{
+		strToLower[i] = toupper(strToLower[i]);
+	}
+	return strToLower;
 }

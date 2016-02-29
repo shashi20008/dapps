@@ -6,6 +6,7 @@ dapps::HttpSocket::HttpSocket(dapps::DappsContext* _context, AbstractClientSocke
 	m_parseComplete = false;
 	m_headersParsed = false;
 	m_commandParsed = false;
+	m_bodyPresent = false;
 	
 	m_responseHeaders = new HttpHeadersMap();
 	m_responseTrailers = new HttpHeadersMap();
@@ -139,6 +140,13 @@ void dapps::HttpSocket::parseHeaders(std::string tempBuffer)
 	{
 		std::vector<std::string> splitedVector = StringUtils::split(tempBuffer, ':');
 		m_requestHeaders->insert(HttpHeader(splitedVector[0],splitedVector[1]));
+		std::string check = StringUtils::toUpperCase(splitedVector[0]);
+		if(StringUtils::toUpperCase(splitedVector[0]) == "CONTENT-LENGTH")
+		{
+			m_bodyPresent = true;
+			//TODO:: replece atoi with some other function
+			m_contentLength = atoi(splitedVector[1].c_str());
+		}
 	}
 }
 
@@ -174,11 +182,16 @@ void dapps::HttpSocket::feed(const char* buffer, ssize_t nread)
 				parseHeaders(tempBuffer);
 			}
 		}
+		else if(m_headersParsed && m_bodyPresent)
+		{		
+			m_requestBody.append(buffer[i]);
+		}
 		else
 		{
-			//std::cout<<"inside last else"<<std::endl;
+
 		}
 	}
+	std::cout<<"m_requestBody"<<m_requestBody.c_str()<<std::endl;
 	std::cout<<"for loop end"<<std::endl;
 }
 
