@@ -1,9 +1,9 @@
 CC=gcc
 CXX=g++
 RM=rm -f
-CPPFLAGS=-Wall
+CPPFLAGS=-Wall $(shell pkg-config --cflags libmongoc-1.0)
 LDFLAGS=
-LDLIBS=-luv
+LDLIBS=-luv $(shell pkg-config --libs libmongoc-1.0)
 
 SRCS=dapps.cc \
 	registry/RegistryServer.cc \
@@ -21,7 +21,8 @@ SRCS=dapps.cc \
 	commons/containers/Buffer.cc \
 	commons/http/HttpSocket.cc \
 	commons/http/AbstractHttpClient.cc \
-	commons/sockets/AbstractClientSocket.cc
+	commons/sockets/AbstractClientSocket.cc \
+	commons/mongodb/MongoClient.cc
 
 OBJS=$(subst .cc,.o,$(SRCS))
 
