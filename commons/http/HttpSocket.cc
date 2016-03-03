@@ -129,11 +129,6 @@ void dapps::HttpSocket::parseCommand(std::string tempBuffer)
 void dapps::HttpSocket::parseHeaders(std::string tempBuffer)
 {
 	if(tempBuffer.empty()){
-		HttpHeadersMap::iterator itr = m_requestHeaders->begin();
-		while(itr!= m_requestHeaders->end()){
-			std::cout<<"key:: "<<itr->first<<" value:: "<<itr->second<<std::endl;
-			itr++;
-		}
 		m_headersParsed =  true;
 	}
 	else 
@@ -146,6 +141,7 @@ void dapps::HttpSocket::parseHeaders(std::string tempBuffer)
 			m_bodyPresent = true;
 			//TODO:: replece atoi with some other function
 			m_contentLength = atoi(splitedVector[1].c_str());
+			m_requestBody = Buffer(m_contentLength);
 		}
 	}
 }
@@ -182,17 +178,17 @@ void dapps::HttpSocket::feed(const char* buffer, ssize_t nread)
 				parseHeaders(tempBuffer);
 			}
 		}
-		else if(m_headersParsed && m_bodyPresent)
+		else if(m_headersParsed && m_bodyPresent && (m_requestBody.size() < m_contentLength))
 		{		
 			m_requestBody.append(buffer[i]);
 		}
-		else
+		//TODO: figure better way
+		if(buffer[i] != '\r')
 		{
-
+			markPossibleEnd = false;
 		}
 	}
-	std::cout<<"m_requestBody"<<m_requestBody.c_str()<<std::endl;
-	std::cout<<"for loop end"<<std::endl;
+	m_parseComplete = true;
 }
 
 void dapps::HttpSocket::write()
