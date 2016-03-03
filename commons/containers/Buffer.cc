@@ -1,4 +1,5 @@
 #include "Buffer.h"
+#include <iostream>
 
 dapps::Buffer::Buffer(std::size_t capacity)
 {
@@ -20,7 +21,7 @@ dapps::Buffer* dapps::Buffer::append(std::string str)
 dapps::Buffer* dapps::Buffer::append(char* str)
 {
 	std::size_t length = 0;
-	while(*str)
+	while(str[length])
 	{
 		length++;
 	}
@@ -53,9 +54,11 @@ bool dapps::Buffer::endsWith(std::string str)
 		return false;
 	}
 	
-	for(std::size_t i = m_loc - 1, j = str.length() - 1; i >= 0 && j >= 0; i--, j--)
+	std::size_t len = str.length();
+	std::size_t whence = m_loc - len;
+	for(std::size_t i = 0; i < len; i++)
 	{
-		if(m_value[i] != str[j])
+		if(m_value[whence + i] != str[i])
 		{
 			return false;
 		}
@@ -69,6 +72,7 @@ bool dapps::Buffer::startsWith(std::string str)
 	{
 		return false;
 	}
+	
 	std::size_t len = str.length();
 	for(std::size_t i = 0; i < len; i++)
 	{
@@ -180,4 +184,3 @@ std::size_t dapps::Buffer::size()
 {
 	return m_loc;
 }
-
