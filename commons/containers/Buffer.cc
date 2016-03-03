@@ -92,7 +92,7 @@ dapps::Buffer& dapps::Buffer::operator=(const Buffer& source)
 
 char& dapps::Buffer::operator[](std::size_t index)
 {
-	if(index < 0 || index >= m_loc)
+	if(index >= m_loc)
 	{
 		//@TODO: Throw instead. This is gonna cry in assignment.
 		throw OutOfBoundsException("Invalid index access in Buffer");
@@ -130,3 +130,9 @@ char* dapps::Buffer::copyTo(char* newVal)
 	newVal[itr] = '\0';
 	return newVal;
 }
+
+std::size_t dapps::Buffer::size()
+{
+	return m_loc;
+}
+

@@ -6,6 +6,7 @@ dapps::HttpSocket::HttpSocket(dapps::DappsContext* _context, AbstractClientSocke
 	m_parseComplete = false;
 	m_headersParsed = false;
 	m_commandParsed = false;
+	m_bodyPresent = false;
 	
 	m_responseHeaders = new HttpHeadersMap();
 	m_responseTrailers = new HttpHeadersMap();
@@ -128,17 +129,20 @@ void dapps::HttpSocket::parseCommand(std::string tempBuffer)
 void dapps::HttpSocket::parseHeaders(std::string tempBuffer)
 {
 	if(tempBuffer.empty()){
-		HttpHeadersMap::iterator itr = m_requestHeaders->begin();
-		while(itr!= m_requestHeaders->end()){
-			std::cout<<"key:: "<<itr->first<<" value:: "<<itr->second<<std::endl;
-			itr++;
-		}
 		m_headersParsed =  true;
 	}
 	else 
 	{
 		std::vector<std::string> splitedVector = StringUtils::split(tempBuffer, ':');
 		m_requestHeaders->insert(HttpHeader(splitedVector[0],splitedVector[1]));
+		std::string check = StringUtils::toUpperCase(splitedVector[0]);
+		if(StringUtils::toUpperCase(splitedVector[0]) == "CONTENT-LENGTH")
+		{
+			m_bodyPresent = true;
+			//TODO:: replece atoi with some other function
+			m_contentLength = atoi(splitedVector[1].c_str());
+			m_requestBody = Buffer(m_contentLength);
+		}
 	}
 }
 
@@ -174,12 +178,17 @@ void dapps::HttpSocket::feed(const char* buffer, ssize_t nread)
 				parseHeaders(tempBuffer);
 			}
 		}
-		else
+		else if(m_headersParsed && m_bodyPresent && (m_requestBody.size() < m_contentLength))
+		{		
+			m_requestBody.append(buffer[i]);
+		}
+		//TODO: figure better way
+		if(buffer[i] != '\r')
 		{
-			//std::cout<<"inside last else"<<std::endl;
+			markPossibleEnd = false;
 		}
 	}
-	std::cout<<"for loop end"<<std::endl;
+	m_parseComplete = true;
 }
 
 void dapps::HttpSocket::write()

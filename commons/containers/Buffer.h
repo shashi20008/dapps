@@ -30,6 +30,7 @@ namespace dapps
 			std::string str();
 			const char* c_str();
 			char* c_strCopy();
+			std::size_t size();
 			
 			// operators
 			Buffer(const Buffer&);
