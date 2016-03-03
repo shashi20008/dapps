@@ -10,3 +10,9 @@ template <typename T> std::string dapps::StringUtils::toString(T& value)
     sstr << value;
     return sstr.str();
 }
+
+template <typename T> void dapps::StringUtils::fromString(std::string str, T* outVar)
+{
+	std::stringstream ss(str);
+	ss >> (*outVar);
+}

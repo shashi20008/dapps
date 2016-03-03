@@ -14,6 +14,7 @@ namespace dapps
 			static std::string toUpperCase(std::string);
 			static std::string toLowerCase(std::string);
 			template <typename T> static std::string toString(T& value);
+			template <typename T> static void fromString(std::string, T*);
 	};
 }
 

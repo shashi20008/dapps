@@ -139,8 +139,8 @@ void dapps::HttpSocket::parseHeaders(std::string tempBuffer)
 		if(StringUtils::toUpperCase(splitedVector[0]) == "CONTENT-LENGTH")
 		{
 			m_bodyPresent = true;
-			//TODO:: replece atoi with some other function
-			m_contentLength = atoi(splitedVector[1].c_str());
+			StringUtils::fromString(splitedVector[1], &m_contentLength);
+			std::cout << "Parse Content-Length: " << m_contentLength << std::endl;
 			m_requestBody = Buffer(m_contentLength);
 		}
 	}

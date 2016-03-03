@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <sys/types.h>
 #include "../containers/Buffer.h"
 #include "../containers/DappsContext.h"
 #include "../containers/JSONTypes.h"
@@ -29,7 +30,7 @@ namespace dapps
 			bool m_headersParsed;
 			bool m_commandParsed;
 			bool m_bodyPresent;
-			int m_contentLength;
+			std::size_t m_contentLength;
 			
 			HttpHeadersMap* m_responseHeaders;
 			HttpHeadersMap* m_responseTrailers;
