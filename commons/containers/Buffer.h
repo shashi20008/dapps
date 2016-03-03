@@ -27,6 +27,10 @@ namespace dapps
 			Buffer* append(char*);
 			Buffer* append(const char*, std::size_t, std::size_t start = 0);
 			Buffer* append(char);
+			bool endsWith(std::string);
+			bool startsWith(std::string);
+			bool isEmpty();
+			void clear();
 			std::string str();
 			const char* c_str();
 			char* c_strCopy();

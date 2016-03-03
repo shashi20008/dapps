@@ -46,6 +46,51 @@ dapps::Buffer* dapps::Buffer::append(char ch)
 	return append(&ch, 1);
 }
 
+bool dapps::Buffer::endsWith(std::string str)
+{
+	if(m_loc < str.length())
+	{
+		return false;
+	}
+	
+	for(std::size_t i = m_loc - 1, j = str.length() - 1; i >= 0 && j >= 0; i--, j--)
+	{
+		if(m_value[i] != str[j])
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+bool dapps::Buffer::startsWith(std::string str)
+{
+	if(m_loc < str.length())
+	{
+		return false;
+	}
+	std::size_t len = str.length();
+	for(std::size_t i = 0; i < len; i++)
+	{
+		if(m_value[i] != str[i])
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+bool dapps::Buffer::isEmpty()
+{
+	return (m_loc == 0);
+}
+
+void dapps::Buffer::clear()
+{
+	m_loc = 0;
+	m_value[m_loc] = '\0';
+}
+
 std::string dapps::Buffer::str()
 {
 	std::string str = m_value;
