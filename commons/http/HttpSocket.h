@@ -32,6 +32,8 @@ namespace dapps
 			bool m_bodyPresent;
 			std::size_t m_contentLength;
 			
+			Buffer m_token;
+			
 			HttpHeadersMap* m_responseHeaders;
 			HttpHeadersMap* m_responseTrailers;
 			Buffer m_responseBody;

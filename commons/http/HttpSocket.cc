@@ -8,6 +8,8 @@ dapps::HttpSocket::HttpSocket(dapps::DappsContext* _context, AbstractClientSocke
 	m_commandParsed = false;
 	m_bodyPresent = false;
 	
+	m_contentLength = 0;
+	
 	m_responseHeaders = new HttpHeadersMap();
 	m_responseTrailers = new HttpHeadersMap();
 	
@@ -118,32 +120,36 @@ bool dapps::HttpSocket::isCommandParsed()
 
 void dapps::HttpSocket::parseCommand(std::string tempBuffer)
 {
+	//std::cout << "parsing command" << std::endl;
 	m_commandParsed = true;
 	std::vector<std::string> splitedVector = StringUtils::split(tempBuffer, ' ');
-	m_requestMethod = splitedVector[0];
-	m_requestPath = splitedVector[1];
-	m_httpVersion = splitedVector[2];
-	std::cout<<m_requestMethod <<m_requestPath<<m_httpVersion<<std::endl;
+	m_requestMethod = StringUtils::trim(splitedVector[0]);
+	m_requestPath = StringUtils::trim(splitedVector[1]);
+	m_httpVersion = StringUtils::trim(splitedVector[2]);
+	//std::cout << "command parsed" << std::endl;
 }
 
 void dapps::HttpSocket::parseHeaders(std::string tempBuffer)
 {
+	//std::cout << "parsing header: " << tempBuffer << std::endl;
 	if(tempBuffer.empty()){
 		m_headersParsed =  true;
 	}
 	else 
 	{
 		std::vector<std::string> splitedVector = StringUtils::split(tempBuffer, ':');
-		m_requestHeaders->insert(HttpHeader(splitedVector[0],splitedVector[1]));
-		std::string check = StringUtils::toUpperCase(splitedVector[0]);
-		if(StringUtils::toUpperCase(splitedVector[0]) == "CONTENT-LENGTH")
+		std::string headerKey = StringUtils::trim(splitedVector[0]);
+		std::string headerValue = StringUtils::trim(splitedVector[1]);
+		
+		m_requestHeaders->insert(HttpHeader(headerKey, headerValue));
+		if(StringUtils::toUpperCase(headerKey) == "CONTENT-LENGTH")
 		{
 			m_bodyPresent = true;
-			StringUtils::fromString(splitedVector[1], &m_contentLength);
-			std::cout << "Parse Content-Length: " << m_contentLength << std::endl;
+			StringUtils::fromString(headerValue, &m_contentLength);
 			m_requestBody = Buffer(m_contentLength);
 		}
 	}
+	//std::cout << "header Parsed" << std::endl;
 }
 
 void dapps::HttpSocket::feed(std::string str)
@@ -151,44 +157,47 @@ void dapps::HttpSocket::feed(std::string str)
 }
 
 void dapps::HttpSocket::feed(const char* buffer, ssize_t nread)
-{	
-	std::string tempBuffer;
-	bool markPossibleEnd = false;
-	int startPos = 0;
-	
-	std::cout<<buffer<<std::endl;
-	for(int i = 0; i < nread; i++)
+{
+	// @TODO: try to avoid multiple append function call.
+	for(ssize_t i = 0; i < nread; i++)
 	{
-		if(buffer[i] == '\r')
+		if(!m_headersParsed)
 		{
-			markPossibleEnd = true;
-		} 
-		else if (markPossibleEnd && buffer[i] == '\n')
-		{
-			if(!m_commandParsed)
-			{	
-				tempBuffer = StringUtils::trim(std::string(buffer).substr(startPos,i-startPos));
-				startPos = i+1;
-				parseCommand(tempBuffer);
-			}
-			else if(!m_headersParsed)
-			{	
-				tempBuffer = StringUtils::trim(std::string(buffer).substr(startPos,i-startPos));
-				startPos = i+1;
-				parseHeaders(tempBuffer);
+			m_token.append(buffer[i]);
+			if(m_token.endsWith("\r\n"))
+			{
+				if(!m_commandParsed)
+				{
+					parseCommand(StringUtils::trim(m_token.str()));
+					m_token.clear();
+				}
+				else
+				{
+					parseHeaders(StringUtils::trim(m_token.str()));
+					m_token.clear();
+				}
 			}
 		}
-		else if(m_headersParsed && m_bodyPresent && (m_requestBody.size() < m_contentLength))
-		{		
-			m_requestBody.append(buffer[i]);
-		}
-		//TODO: figure better way
-		if(buffer[i] != '\r')
+		else if(m_bodyPresent && m_contentLength > m_requestBody.size())
 		{
-			markPossibleEnd = false;
+			std::size_t bytesLeftInBuffer = nread - i;
+			std::size_t bytesLeftToRead = m_contentLength - m_requestBody.size();
+			std::size_t bytesToRead = (bytesLeftInBuffer >= bytesLeftToRead ? bytesLeftToRead : bytesLeftInBuffer);
+			m_requestBody.append(buffer, bytesToRead, i);
+			break;
 		}
 	}
-	m_parseComplete = true;
+	
+	/*
+	if(nread <= 0)
+	{
+		std::cout << "the request closed on other end" << std::endl;
+		std::cout << "Method: " << m_requestMethod << std::endl;
+		std::cout << "Path: " << m_requestPath << std::endl;
+		std::cout << "Version: " << m_httpVersion << std::endl;
+		std::cout << "Body: " << m_requestBody.c_str() << std::endl;
+	}
+	*/
 }
 
 void dapps::HttpSocket::write()
