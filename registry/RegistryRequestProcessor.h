@@ -3,17 +3,19 @@
 
 #include "../commons/containers/DappsContext.h"
 #include "../commons/http/HttpSocket.h"
+#include "../commons/http/AbstractHttpClient.h"
 
 namespace dapps
 {
-	class RegistryRequestProcessor
+	class RegistryRequestProcessor : public AbstractHttpClient
 	{
 		private:
-			DappsContext* m_context;
-			HttpSocket* m_httpSocket;
+			static RegistryRequestProcessor* m_self;
+			RegistryRequestProcessor();
 			
 		public:
-			RegistryRequestProcessor(DappsContext*, HttpSocket*);
+			static RegistryRequestProcessor* get();
+			void process(DappsContext*, HttpSocket*);
 			
 	};
 }

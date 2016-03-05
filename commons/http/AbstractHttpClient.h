@@ -3,13 +3,14 @@
 
 #include "../dapps-commons.h"
 #include "HttpSocket.h"
+#include "../containers/DappsContext.h"
 
 namespace dapps
 {
 	class AbstractHttpClient
 	{
 		public:
-			virtual void process(HttpSocket*) = 0;
+			virtual void process(DappsContext*, HttpSocket*) = 0;
 	};
 }
 
