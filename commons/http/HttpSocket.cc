@@ -134,6 +134,11 @@ void dapps::HttpSocket::parseHeaders(std::string tempBuffer)
 	//std::cout << "parsing header: " << tempBuffer << std::endl;
 	if(tempBuffer.empty()){
 		m_headersParsed =  true;
+		
+		if(!m_bodyPresent)
+		{
+			m_parseComplete = true;
+		}
 	}
 	else 
 	{
@@ -158,7 +163,13 @@ void dapps::HttpSocket::feed(std::string str)
 
 void dapps::HttpSocket::feed(const char* buffer, ssize_t nread)
 {
-	// @TODO: try to avoid multiple append function call.
+	if(m_parseComplete)
+	{
+		// We already have all we need.
+		return;
+	}
+	
+	// @TODO: try to avoid multiple append function calls.
 	for(ssize_t i = 0; i < nread; i++)
 	{
 		if(!m_headersParsed)
@@ -184,20 +195,19 @@ void dapps::HttpSocket::feed(const char* buffer, ssize_t nread)
 			std::size_t bytesLeftToRead = m_contentLength - m_requestBody.size();
 			std::size_t bytesToRead = (bytesLeftInBuffer >= bytesLeftToRead ? bytesLeftToRead : bytesLeftInBuffer);
 			m_requestBody.append(buffer, bytesToRead, i);
+			
+			if(m_contentLength <= m_requestBody.size())
+			{
+				m_parseComplete = true;
+			}
 			break;
-		}
+		} 
 	}
 	
-	/*
-	if(nread <= 0)
+	if(m_parseComplete)
 	{
-		std::cout << "the request closed on other end" << std::endl;
-		std::cout << "Method: " << m_requestMethod << std::endl;
-		std::cout << "Path: " << m_requestPath << std::endl;
-		std::cout << "Version: " << m_httpVersion << std::endl;
-		std::cout << "Body: " << m_requestBody.c_str() << std::endl;
+		m_client->process(m_context, this);
 	}
-	*/
 }
 
 void dapps::HttpSocket::write()
