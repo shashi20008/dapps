@@ -22,7 +22,7 @@ std::string dapps::StringUtils::trim(std::string strToTrim)
 	return strToTrim;
 }
 
-std::vector<std::string> dapps::StringUtils::split(std::string strToSplit, char separator)
+std::vector<std::string> dapps::StringUtils::split(std::string strToSplit, char separator, std::size_t limit, bool ignoreEmpty)
 {
 	std::vector<std::string> stringVector;
 	int ePos;
@@ -31,8 +31,23 @@ std::vector<std::string> dapps::StringUtils::split(std::string strToSplit, char 
 	while(!strToSplit.empty())
 	{
 		ePos = strToSplit.find(separator);
-		stringVector.push_back(strToSplit.substr(0, ePos));
+		std::string part = strToSplit.substr(0, ePos);
 		strToSplit = strToSplit.substr(ePos+1, strToSplit.length());
+		
+		if(ignoreEmpty && part.empty())
+		{
+			continue;
+		}
+		
+		stringVector.push_back(part);
+		
+		if(limit && stringVector.size() >= limit && !strToSplit.empty()) 
+		{
+			stringVector.pop_back();
+			strToSplit.erase(strToSplit.end() - 1);
+			stringVector.push_back(part + separator + strToSplit);
+			break;
+		}
 	}
 	return stringVector;
 }
@@ -54,3 +69,16 @@ std::string dapps::StringUtils::toLowerCase(std::string strToLower)
 	}
 	return strToLower;
 }
+
+/*
+int main ()
+{
+	std::string str = "shashi is a good    boy";
+	std::vector<std::string> strs = dapps::StringUtils::split(str, ' ', 4, true);
+	for(int i = 0; i < strs.size(); i++)
+	{
+		std::cout << i << ": |-->>" << strs[i] << "<<--|" << std::endl;
+	}
+	return 0;
+}
+*/
