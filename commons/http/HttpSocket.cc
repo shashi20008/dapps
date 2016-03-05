@@ -18,6 +18,21 @@ dapps::HttpSocket::HttpSocket(dapps::DappsContext* _context, AbstractClientSocke
 	m_client = _client;
 }
 
+std::string dapps::HttpSocket::getRequestMethod()
+{
+	return m_requestMethod;
+}
+
+std::string dapps::HttpSocket::getRequestPath()
+{
+	return m_requestPath;
+}
+
+std::string dapps::HttpSocket::getHttpVersion()
+{
+	return m_httpVersion;
+}
+
 dapps::HttpHeadersMap* dapps::HttpSocket::getRequestHeaders()
 {
 	return m_requestHeaders;
