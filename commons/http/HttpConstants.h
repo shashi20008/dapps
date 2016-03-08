@@ -69,7 +69,7 @@ namespace dapps
 			static const int HTTP_STATUS_CODE_NOT_EXTENDED; // 510
 			static const int HTTP_STATUS_CODE_NETWORK_AUTHENTICATION_REQUIRED; // 511
 			
-			// Messages
+			// HTTP Status Messages
 			// 1XX
 			static const char* HTTP_STATUS_MESSAGE_CONTINUE; // "Continue";
 			static const char* HTTP_STATUS_MESSAGE_SWITCHING_PROTOCOLS; // "Switching Protocols";
@@ -129,6 +129,74 @@ namespace dapps
 			static const char* HTTP_STATUS_MESSAGE_HTTP_VERSION_NOT_SUPPORTED; // "HTTP Version Not Supported";
 			static const char* HTTP_STATUS_MESSAGE_NOT_EXTENDED; // "Not Extended";
 			static const char* HTTP_STATUS_MESSAGE_NETWORK_AUTHENTICATION_REQUIRED; // "Network Authentication Required";
+			
+			// HTTP Header Fields
+			static const char* HTTP_HEADER_ACCEPT; //Accept
+			static const char* HTTP_HEADER_ACCEPT_CHARSET; //Accept-Charset
+			static const char* HTTP_HEADER_ACCEPT_ENCODING; //
+			static const char* HTTP_HEADER_ACCEPT_LANGAUGE; //
+			static const char* HTTP_HEADER_AUTHORIZATION; //
+			static const char* HTTP_HEADER_CACHE_CONTROL; //
+			static const char* HTTP_HEADER_CONNECTION; //
+			static const char* HTTP_HEADER_COOKIE; //
+			static const char* HTTP_HEADER_CONTENT_LENGTH; //
+			static const char* HTTP_HEADER_CONTENT_MD5; //
+			static const char* HTTP_HEADER_CONTENT_TYPE; //
+			static const char* HTTP_HEADER_DATE; //
+			static const char* HTTP_HEADER_EXPECT; //
+			static const char* HTTP_HEADER_FORWARDED; //
+			static const char* HTTP_HEADER_FROM; //
+			static const char* HTTP_HEADER_HOST; //
+			static const char* HTTP_HEADER_IF_MATCH; //
+			static const char* HTTP_HEADER_IF_MODIFIED_SINCE; //
+			static const char* HTTP_HEADER_IF_NONE_MATCH; //
+			static const char* HTTP_HEADER_IF_RANGE; //
+			static const char* HTTP_HEADER_IF_UNMODIFIED_SINCE; //
+			static const char* HTTP_HEADER_MAX_FORWARDS; //
+			static const char* HTTP_HEADER_ORIGIN; //
+			static const char* HTTP_HEADER_PRAGMA; //
+			static const char* HTTP_HEADER_PROXY_AUTHORIZATION; //
+			static const char* HTTP_HEADER_RANGE; //
+			static const char* HTTP_HEADER_REFERER; //
+			static const char* HTTP_HEADER_TE; //
+			static const char* HTTP_HEADER_USER_AGENT; //
+			static const char* HTTP_HEADER_UPGRADE; //
+			static const char* HTTP_HEADER_VIA; //
+			static const char* HTTP_HEADER_WARNING; //
+			static const char* HTTP_HEADER_X_REQUESTED_WITH; //
+			static const char* HTTP_HEADER_X_FORWARDED_FOR; //
+			static const char* HTTP_HEADER_X_FORWARDED_HOST; //
+			static const char* HTTP_HEADER_X_FORWARDED_PROTO; //
+			static const char* HTTP_HEADER_X_HTTP_METHOD_OVERRIDE; //
+			
+			static const char* HTTP_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN; //
+			static const char* HTTP_HEADER_ACCEPT_PATCH; //
+			static const char* HTTP_HEADER_ACCEPT_RANGES; //
+			static const char* HTTP_HEADER_AGE; //
+			static const char* HTTP_HEADER_ALLOW; //
+			static const char* HTTP_HEADER_CONTENT_DISPOSITION; //
+			static const char* HTTP_HEADER_CONTENT_ENCODING; //
+			static const char* HTTP_HEADER_CONTENT_LANGUAGE; //
+			static const char* HTTP_HEADER_CONTENT_LOCATION; //
+			static const char* HTTP_HEADER_CONTENT_RANGE; //
+			static const char* HTTP_HEADER_ETAG; //
+			static const char* HTTP_HEADER_EXPIRES; //
+			static const char* HTTP_HEADER_LAST_MODIFIED; //
+			static const char* HTTP_HEADER_LINK; //
+			static const char* HTTP_HEADER_LOCATION; //
+			static const char* HTTP_HEADER_P3P; //
+			static const char* HTTP_HEADER_PROXY_AUTHENTICATE; //
+			static const char* HTTP_HEADER_PUBLIC_KEY_PINS; //
+			static const char* HTTP_HEADER_RETRY_AFTER; //
+			static const char* HTTP_HEADER_SERVER; //
+			static const char* HTTP_HEADER_SET_COOKIE; //
+			static const char* HTTP_HEADER_STRICT_TRANSPORT_SECURITY; //
+			static const char* HTTP_HEADER_TRAILER; //
+			static const char* HTTP_HEADER_TRANSFER_ENCODING; //
+			static const char* HTTP_HEADER_TSV; //
+			static const char* HTTP_HEADER_VARY; //
+			static const char* HTTP_HEADER_WWW_AUTHENTICATE; //
+			static const char* HTTP_HEADER_X_POWERED_BY; //
 	};
 }
 
