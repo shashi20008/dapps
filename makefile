@@ -21,8 +21,10 @@ SRCS=dapps.cc \
 	commons/containers/Buffer.cc \
 	commons/http/HttpSocket.cc \
 	commons/http/AbstractHttpClient.cc \
+	commons/http/HttpResponse.cc \
 	commons/sockets/AbstractClientSocket.cc \
-	commons/mongodb/MongoClient.cc
+	commons/mongodb/MongoClient.cc \
+	commons/utilities/DappsErrors.cc
 
 OBJS=$(subst .cc,.o,$(SRCS))
 

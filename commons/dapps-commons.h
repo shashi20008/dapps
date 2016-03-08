@@ -2,6 +2,10 @@
 #define __dapps_COMMONS__
 namespace dapps
 {
+	// typedefs 
+	typedef std::map<std::string, std::string> HttpHeadersMap;
+	typedef std::pair<std::string, std::string> HttpHeader;
+	
 	// Forward declarations to satisfy circular dependencies
 	class Buffer;
 	class DappsContext;
@@ -13,5 +17,7 @@ namespace dapps
 	class AbstractClientSocket;
 	class LoggingUtil;
 	class StringUtils;
+	class HttpSocket;
+	class HttpResponse;
 }
 #endif //__dapps_COMMONS__
