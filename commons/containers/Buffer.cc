@@ -101,7 +101,7 @@ std::string dapps::Buffer::str()
 	return str;
 }
 
-const char* dapps::Buffer::c_str()
+char* dapps::Buffer::c_str()
 {
 	return m_value;
 }

@@ -32,7 +32,7 @@ namespace dapps
 			bool isEmpty();
 			void clear();
 			std::string str();
-			const char* c_str();
+			char* c_str();
 			char* c_strCopy();
 			std::size_t size();
 			
