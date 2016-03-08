@@ -73,7 +73,7 @@ std::string dapps::HttpResponse::getHttpVersion()
 dapps::Buffer dapps::HttpResponse::getTCPPayload()
 {
 	Buffer payload;	
-	payload.append(StringUtils::toString(m_status) + " OK " + m_httpVersion + "\r\n");
+	payload.append(m_httpVersion + " " + StringUtils::toString(m_status) + " OK" + "\r\n");
 	HttpHeadersMap::iterator it = m_headers->begin();
 	while(it != m_headers->end())
 	{

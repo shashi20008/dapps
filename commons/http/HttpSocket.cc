@@ -160,4 +160,7 @@ void dapps::HttpSocket::feed(const char* buffer, ssize_t nread)
 
 void dapps::HttpSocket::write(HttpResponse* _httpResponse)
 {
+	_httpResponse->setHttpVersion(m_httpVersion);
+	Buffer payload = _httpResponse->getTCPPayload();
+	m_socket->write(payload.c_str(), payload.size());
 }
