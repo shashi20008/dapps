@@ -22,6 +22,7 @@ SRCS=dapps.cc \
 	commons/http/HttpSocket.cc \
 	commons/http/AbstractHttpClient.cc \
 	commons/http/HttpResponse.cc \
+	commons/http/HttpConstants.cc \
 	commons/sockets/AbstractClientSocket.cc \
 	commons/mongodb/MongoClient.cc \
 	commons/utilities/DappsErrors.cc
