@@ -18,7 +18,7 @@ dapps::Buffer* dapps::Buffer::append(std::string str)
 	return append(str.c_str(), str.length());
 }
 
-dapps::Buffer* dapps::Buffer::append(char* str)
+dapps::Buffer* dapps::Buffer::append(const char* str)
 {
 	std::size_t length = 0;
 	while(str[length])
@@ -131,6 +131,7 @@ dapps::Buffer& dapps::Buffer::operator=(const Buffer& source)
 	}
 	m_size = source.m_size;
 	m_loc = source.m_loc;
+	// @TODO: delete old one here.
 	m_value = new char[m_size];
 	for(std::size_t i = 0; i <= m_loc; i++)
 	{
