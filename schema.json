@@ -1,0 +1,54 @@
+Applications Schema
+{
+	"appId": {
+		"type": "Number"
+	},
+	"appName": {
+		"type": "String"
+	},
+	"uriPattern": {
+		"type": "String"
+	},
+	"activeRequests": {
+		"type": "Number"
+	},
+	"rateLimitFactor": {
+		"numRequests": {
+			"type": "Number"
+		},
+		"period": {
+			"type": "String",
+			"valList": [
+				"MINUTE",
+				"HOUR",
+				"DAY"
+			]
+		},
+		"currentPeriodStart": {
+			"type": "Number"
+		},
+		"currentPeriodRequests: {
+			"type": "Number"
+		}
+	}
+}
+
+Servers Schema
+{
+	"appId": {
+		"type": "Number",
+		"foreignKey": "Applications"
+	},
+	"ip": {
+		"type": "String"
+	},
+	"port": {
+		"type": "String"
+	},
+	"load": {
+		"type": "Number"
+	},
+	"requests": {
+		"type": "Number"
+	}
+}
