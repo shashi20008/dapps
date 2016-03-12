@@ -1,6 +1,7 @@
 #ifndef __dapps_HTTP_SOCKET__
 #define __dapps_HTTP_SOCKET__
 
+#include "../dapps-commons.h"
 #include <map>
 #include <string>
 #include <iostream>
@@ -9,7 +10,7 @@
 #include "../containers/Buffer.h"
 #include "../containers/DappsContext.h"
 #include "../containers/JSONTypes.h"
-#include "AbstractHttpClient.h"
+#include "AbstractHttpApplication.h"
 #include "../sockets/AbstractClientSocket.h"
 #include "../utilities/StringUtils.h"
 #include "HttpResponse.h"
@@ -34,10 +35,10 @@ namespace dapps
 			
 			DappsContext* m_context;
 			AbstractClientSocket* m_socket;
-			AbstractHttpClient* m_client;
+			AbstractHttpApplication* m_client;
 		
 		public:
-			HttpSocket(DappsContext*, AbstractClientSocket*, AbstractHttpClient*);
+			HttpSocket(DappsContext*, AbstractClientSocket*, AbstractHttpApplication*);
 			std::string getRequestMethod();
 			std::string getRequestPath();
 			std::string getHttpVersion();

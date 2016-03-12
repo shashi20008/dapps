@@ -1,5 +1,9 @@
 #ifndef __dapps_COMMONS__
 #define __dapps_COMMONS__
+
+#include <map>
+#include <string>
+
 namespace dapps
 {
 	// typedefs 
@@ -11,7 +15,7 @@ namespace dapps
 	class DappsContext;
 	class DappsException;
 	class JSONParseException;
-	class AbstractHttpClient;
+	class AbstractHttpApplication;
 	class HttpSocket;
 	class JSON;
 	class AbstractClientSocket;

@@ -3,11 +3,11 @@
 
 #include "../commons/containers/DappsContext.h"
 #include "../commons/http/HttpSocket.h"
-#include "../commons/http/AbstractHttpClient.h"
+#include "../commons/http/AbstractHttpApplication.h"
 
 namespace dapps
 {
-	class RegistryRequestProcessor : public AbstractHttpClient
+	class RegistryRequestProcessor : public AbstractHttpApplication
 	{
 		private:
 			static RegistryRequestProcessor* m_self;

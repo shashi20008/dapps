@@ -1,6 +1,6 @@
 #include "HttpSocket.h"
 
-dapps::HttpSocket::HttpSocket(dapps::DappsContext* _context, AbstractClientSocket* _socket, AbstractHttpClient* _client)
+dapps::HttpSocket::HttpSocket(dapps::DappsContext* _context, AbstractClientSocket* _socket, AbstractHttpApplication* _client)
 {
 	m_requestHeaders = new HttpHeadersMap();
 	m_parseComplete = false;

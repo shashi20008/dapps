@@ -1,6 +1,7 @@
 #ifndef __dapps_ABSTRACT_CLIENT_SOCKET__
 #define __dapps_ABSTRACT_CLIENT_SOCKET__
 
+#include <cstddef>
 
 namespace dapps
 {

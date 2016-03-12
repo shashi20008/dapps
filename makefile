@@ -20,7 +20,7 @@ SRCS=dapps.cc \
 	commons/containers/DappsContext.cc \
 	commons/containers/Buffer.cc \
 	commons/http/HttpSocket.cc \
-	commons/http/AbstractHttpClient.cc \
+	commons/http/AbstractHttpApplication.cc \
 	commons/http/HttpResponse.cc \
 	commons/http/HttpConstants.cc \
 	commons/sockets/AbstractClientSocket.cc \
