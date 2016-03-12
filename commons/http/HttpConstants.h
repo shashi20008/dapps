@@ -2,13 +2,18 @@
 #define __dapps_HTTP_CONSTANTS__
 
 #include <string>
+#include <map>
 
 namespace dapps
 {
 	class HttpConstants
 	{
+		private:
+			static std::map<const int, const char*>* m_statusMap;
+			static void initialize();
 		public:
-			// HTTP Status codes
+			static const char* getStatusMessage(const int);
+			// HTTP Status 
 			// 1XX
 			static const int HTTP_STATUS_CODE_CONTINUE; //100
 			static const int HTTP_STATUS_CODE_SWITCHING_PROTOCOLS; //101
