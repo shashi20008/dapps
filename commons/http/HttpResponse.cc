@@ -1,4 +1,5 @@
 #include "HttpResponse.h"
+#include "HttpConstants.h"
 #include "../utilities/StringUtils.h"
 #include <iostream>
 
@@ -73,7 +74,7 @@ std::string dapps::HttpResponse::getHttpVersion()
 dapps::Buffer dapps::HttpResponse::getTCPPayload()
 {
 	Buffer payload;	
-	payload.append(m_httpVersion + " " + StringUtils::toString(m_status) + " OK" + "\r\n");
+	payload.append(m_httpVersion + " " + StringUtils::toString(m_status) + HttpConstants::getStatusMessage(m_status) + "\r\n");
 	HttpHeadersMap::iterator it = m_headers->begin();
 	while(it != m_headers->end())
 	{
@@ -89,11 +90,11 @@ dapps::Buffer dapps::HttpResponse::getTCPPayload()
 dapps::HttpResponse* dapps::HttpResponse::createSuccessResponse(std::string _body, dapps::HttpHeadersMap* _additionalHeaders)
 {
 	HttpResponse* _response = new HttpResponse();
-	_response->m_status = 200;
+	_response->m_status = HttpConstants::HTTP_STATUS_CODE_OK;
 	_response->m_body.append(_body);
 	std::size_t _bodyLen = _response->m_body.size();
-	_response->m_headers->insert(HttpHeader("Content-Length", StringUtils::toString(_bodyLen)));
-	_response->m_headers->insert(HttpHeader("Content-Type", "application/json"));
+	_response->m_headers->insert(HttpHeader(HttpConstants::HTTP_HEADER_CONTENT_LENGTH, StringUtils::toString(_bodyLen)));
+	_response->m_headers->insert(HttpHeader(HttpConstants::HTTP_HEADER_CONTENT_TYPE, "application/json"));
 	if(_additionalHeaders != NULL)
 	{
 		_response->m_headers->insert(_additionalHeaders->begin(), _additionalHeaders->end());
@@ -105,7 +106,7 @@ dapps::HttpResponse* dapps::HttpResponse::createSuccessResponse(std::string _bod
 dapps::HttpResponse* dapps::HttpResponse::createFailureResponse(std::string _body, dapps::HttpHeadersMap* _additionalHeaders)
 {
 	HttpResponse* _response = createSuccessResponse(_body, _additionalHeaders);
-	_response->m_status = 500;
+	_response->m_status = HttpConstants::HTTP_STATUS_CODE_BAD_REQUEST;
 	return _response;
 }
 
