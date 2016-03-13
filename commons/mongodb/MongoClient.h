@@ -4,6 +4,7 @@
 #include <mongoc.h>
 #include <bson.h>
 #include <string>
+#include "../containers/ServerSchema.h"
 
 namespace dapps
 {
@@ -20,6 +21,7 @@ namespace dapps
 			MongoClient();
 			bson_t* getApplicationByURI(const char*);
 			std::string getApplicationIdByURI (const char*);
+			std::string getServer ( std::string);
 			
 			static const char* DAPPS_DB_NAME;
 			static const char* APPS_COLLECTION_NAME;

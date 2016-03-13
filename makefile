@@ -22,7 +22,8 @@ SRCS=dapps.cc \
 	commons/http/HttpSocket.cc \
 	commons/http/AbstractHttpClient.cc \
 	commons/sockets/AbstractClientSocket.cc \
-	commons/mongodb/MongoClient.cc
+	commons/mongodb/MongoClient.cc \
+	commons/containers/ServerSchema.cc
 
 OBJS=$(subst .cc,.o,$(SRCS))
 
