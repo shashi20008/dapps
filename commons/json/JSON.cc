@@ -251,6 +251,38 @@ std::string dapps::JSON::parseKey(std::string& input, uint64_t& counter)
 	return key;
 }
 
+dapps::JSON_t* dapps::JSON::parseBoolean(std::string& input, uint64_t& counter)
+{
+	char* token = new char[6];
+	uint64_t i = 0;
+	while(i < 5 && input[counter] >= 'a' && input[counter] <= 'z')
+	{
+		token[i] = input[counter];
+		i++;
+		counter++;
+	}
+	token[i] = '\0';
+	JSON_t* _val = new JSON_t();
+	_val->m_type = JSON_t::VALUE_TYPE_BOOLEAN;
+	if(strcmp(token, "true") == 0) 
+	{
+		_val->m_val.m_bool = true;
+	} 
+	else if(strcmp(token, "false") == 0) 
+	{
+		_val->m_val.m_bool = false;
+	}
+	else 
+	{
+		throw JSONParseException("Invalid JSON object");
+	}
+	skipWhiteSpace(input, counter);
+	
+	//cleanup
+	delete token;
+	return _val;
+}
+
 dapps::JSON_t* dapps::JSON::parseArray(std::string& input, uint64_t& counter)
 {
 	if(input[counter] != '[') {
@@ -305,7 +337,7 @@ dapps::JSONParserFunc dapps::JSON::getParserFunc(std::string& input, uint64_t& c
 	{
 		return parseNumber;
 	}
-	return NULL;
+	return parseBoolean;
 }
 
 dapps::JSONStringifierFunc dapps::JSON::getStringifierFunc(dapps::JSON_t* json)

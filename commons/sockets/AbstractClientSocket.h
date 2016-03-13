@@ -1,11 +1,14 @@
 #ifndef __dapps_ABSTRACT_CLIENT_SOCKET__
 #define __dapps_ABSTRACT_CLIENT_SOCKET__
 
+#include <cstddef>
+
 namespace dapps
 {
 	class AbstractClientSocket
 	{
-		virtual void write(char*) = 0;
+		public:
+			virtual void write(char*, std::size_t) = 0;
 	};
 }
 

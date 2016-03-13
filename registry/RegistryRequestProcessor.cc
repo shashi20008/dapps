@@ -1,6 +1,7 @@
 #include "RegistryRequestProcessor.h"
-#include "../commons/exceptions/DappsException.h"
+#include "../commons/utilities/DappsErrors.h"
 #include "../commons/mongodb/MongoClient.h"
+#include "../commons/http/HttpResponse.h"
 #include <iostream>
 
 dapps::RegistryRequestProcessor* dapps::RegistryRequestProcessor::m_self =  NULL;
@@ -26,7 +27,10 @@ void dapps::RegistryRequestProcessor::process(dapps::DappsContext* _context, dap
 	if(urlPartsLen < 2)
 	{
 		// @TODO: return error response instead.
-		throw DappsException("Invalid Request received");
+		//socket->write(DappsErrors::INVALID_REQUEST_URI->getJSONString());
+		HttpResponse* response = HttpResponse::createSuccessResponse(DappsErrors::INVALID_REQUEST_URI->getJSONString());
+		socket->write(response);
+		return;
 	}
 	
 	// @TODO: move _empty to a static constants file.
@@ -38,4 +42,5 @@ void dapps::RegistryRequestProcessor::process(dapps::DappsContext* _context, dap
 	MongoClient* mongoClient = new MongoClient();
 	std::string appId = mongoClient->getApplicationIdByURI(appURI.c_str());
 	std::cout << "AppId: '" << appId << "' got '" << socket->getRequestBody().str() << "' request" << std::endl;
+	delete mongoClient;
 }

@@ -1,6 +1,6 @@
 #include "HttpSocket.h"
 
-dapps::HttpSocket::HttpSocket(dapps::DappsContext* _context, AbstractClientSocket* _socket, AbstractHttpClient* _client)
+dapps::HttpSocket::HttpSocket(dapps::DappsContext* _context, AbstractClientSocket* _socket, AbstractHttpApplication* _client)
 {
 	m_requestHeaders = new HttpHeadersMap();
 	m_parseComplete = false;
@@ -9,9 +9,6 @@ dapps::HttpSocket::HttpSocket(dapps::DappsContext* _context, AbstractClientSocke
 	m_bodyPresent = false;
 	
 	m_contentLength = 0;
-	
-	m_responseHeaders = new HttpHeadersMap();
-	m_responseTrailers = new HttpHeadersMap();
 	
 	m_context = _context;
 	m_socket = _socket;
@@ -53,70 +50,6 @@ dapps::JSON_t* dapps::HttpSocket::getRequestBodyJson()
 {
 	return NULL;
 }
-
-dapps::HttpSocket* dapps::HttpSocket::setResponseHeaders(dapps::HttpHeadersMap* headers)
-{
-	m_responseHeaders = headers;
-	return this;
-}
-
-dapps::HttpSocket* dapps::HttpSocket::setResponseHeader(std::string headerName, std::string headerVal)
-{
-	return this;
-}
-
-dapps::HttpSocket* dapps::HttpSocket::setResponseTrailers(dapps::HttpHeadersMap* trailers)
-{
-	m_responseTrailers = trailers;
-	return this;
-}
-
-dapps::HttpSocket* dapps::HttpSocket::setResponseTrailer(std::string trailerName, std::string trailerVal)
-{
-	return this;
-}
-
-dapps::HttpSocket* dapps::HttpSocket::setResponseBody(dapps::Buffer body)
-{
-	m_responseBody = body;
-	return this;
-}
-
-dapps::HttpSocket* dapps::HttpSocket::setResponseBody(dapps::JSON_t* bodyJson)
-{
-	return this;
-}
-
-dapps::HttpHeadersMap* dapps::HttpSocket::getResponseHeaders()
-{
-	return m_responseHeaders;
-}
-
-std::string dapps::HttpSocket::getResponseHeader(std::string headerName)
-{
-	return "";
-}
-
-dapps::HttpHeadersMap* dapps::HttpSocket::getResponseTrailers()
-{
-	return m_responseTrailers;
-}
-
-std::string dapps::HttpSocket::getResponseTrailer(std::string trailerName)
-{
-	return "";
-}
-
-dapps::Buffer dapps::HttpSocket::getResponseBody()
-{
-	return m_responseBody;
-}
-
-dapps::JSON_t* dapps::HttpSocket::getResponseBodyJson()
-{
-	return NULL;
-}
-
 
 bool dapps::HttpSocket::isHeadersParsed()
 {
@@ -225,6 +158,9 @@ void dapps::HttpSocket::feed(const char* buffer, ssize_t nread)
 	}
 }
 
-void dapps::HttpSocket::write()
+void dapps::HttpSocket::write(HttpResponse* _httpResponse)
 {
+	_httpResponse->setHttpVersion(m_httpVersion);
+	Buffer payload = _httpResponse->getTCPPayload();
+	m_socket->write(payload.c_str(), payload.size());
 }

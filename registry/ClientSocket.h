@@ -29,11 +29,11 @@ namespace dapps
 		public:
 			ClientSocket(RegistryServer*);
 			~ClientSocket();
-			void write(char*);
-			static void writeData(uv_stream_t*, uv_stream_t*, std::string);
+			void write(char*, std::size_t);
 			static void onClientRead(uv_stream_t*, ssize_t , const uv_buf_t*);
-			static void onClientWrite(uv_write_t*, int);
+			static void onWriteComplete(uv_write_t*, int);
 			static void allocBuffer(uv_handle_t*, size_t, uv_buf_t*);
+			static void onSocketClose(uv_handle_t*);
 	};
 }
 #endif //__ClientSocket__

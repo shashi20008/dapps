@@ -1,6 +1,7 @@
 #ifndef __dapps_HTTP_SOCKET__
 #define __dapps_HTTP_SOCKET__
 
+#include "../dapps-commons.h"
 #include <map>
 #include <string>
 #include <iostream>
@@ -9,15 +10,13 @@
 #include "../containers/Buffer.h"
 #include "../containers/DappsContext.h"
 #include "../containers/JSONTypes.h"
-#include "AbstractHttpClient.h"
+#include "AbstractHttpApplication.h"
 #include "../sockets/AbstractClientSocket.h"
 #include "../utilities/StringUtils.h"
+#include "HttpResponse.h"
 
 namespace dapps
 {
-	typedef std::map<std::string, std::string> HttpHeadersMap;
-	typedef std::pair<std::string, std::string> HttpHeader;
-	
 	class HttpSocket
 	{
 		private:
@@ -34,16 +33,12 @@ namespace dapps
 			
 			Buffer m_token;
 			
-			HttpHeadersMap* m_responseHeaders;
-			HttpHeadersMap* m_responseTrailers;
-			Buffer m_responseBody;
-			
 			DappsContext* m_context;
 			AbstractClientSocket* m_socket;
-			AbstractHttpClient* m_client;
+			AbstractHttpApplication* m_client;
 		
 		public:
-			HttpSocket(DappsContext*, AbstractClientSocket*, AbstractHttpClient*);
+			HttpSocket(DappsContext*, AbstractClientSocket*, AbstractHttpApplication*);
 			std::string getRequestMethod();
 			std::string getRequestPath();
 			std::string getHttpVersion();
@@ -52,25 +47,12 @@ namespace dapps
 			Buffer getRequestBody();
 			JSON_t* getRequestBodyJson();
 			
-			HttpSocket* setResponseHeaders(HttpHeadersMap*);
-			HttpSocket* setResponseHeader(std::string, std::string);
-			HttpSocket* setResponseTrailers(HttpHeadersMap*);
-			HttpSocket* setResponseTrailer(std::string, std::string);
-			HttpSocket* setResponseBody(Buffer);
-			HttpSocket* setResponseBody(JSON_t*);
-			HttpHeadersMap* getResponseHeaders();
-			std::string getResponseHeader(std::string);
-			HttpHeadersMap* getResponseTrailers();
-			std::string getResponseTrailer(std::string);
-			Buffer getResponseBody();
-			JSON_t* getResponseBodyJson();
-			
 			bool isHeadersParsed();
 			bool isCommandParsed();
 			bool isParsingComplete();
 			void feed(std::string);
 			void feed(const char*, ssize_t);
-			void write();
+			void write(HttpResponse*);
 
 			void parseCommand(std::string);
 			void parseHeaders(std::string);

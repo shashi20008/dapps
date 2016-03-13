@@ -7,7 +7,7 @@
 
 namespace dapps
 {
-	class AbstractHttpClient
+	class AbstractHttpApplication
 	{
 		public:
 			virtual void process(DappsContext*, HttpSocket*) = 0;
