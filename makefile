@@ -9,6 +9,8 @@ SRCS=dapps.cc \
 	registry/RegistryServer.cc \
 	registry/ClientSocket.cc \
 	registry/RegistryRequestProcessor.cc \
+	app/DappsServer.cc \
+	app/DappsSocket.cc \
 	utilities/ArgsProcessor.cc \
 	commons/json/JSON.cc \
 	commons/containers/JSONTypes.cc \

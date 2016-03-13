@@ -21,19 +21,13 @@ namespace dapps
 			LoggingUtil* m_logger;
 			
 		private:
-			DappsContext* m_context;
-			uv_tcp_t* m_client;
 			RegistryServer* m_registryServer;
-			std::string* m_stringBuffer;
 			HttpSocket* m_httpSocket;
 		public:
 			ClientSocket(RegistryServer*);
 			~ClientSocket();
 			void write(char*, std::size_t);
-			static void onClientRead(uv_stream_t*, ssize_t , const uv_buf_t*);
-			static void onWriteComplete(uv_write_t*, int);
-			static void allocBuffer(uv_handle_t*, size_t, uv_buf_t*);
-			static void onSocketClose(uv_handle_t*);
+			void feed(const char*, ssize_t);
 	};
 }
 #endif //__ClientSocket__
