@@ -29,6 +29,12 @@ namespace dapps
 		public:
 			JSONValueType m_type;
 			JSONContainer m_val;
+			JSONObject* getObject();
+			JSONArray* getArray();
+			std::string getString();
+			double getDouble();
+			int64_t getInt();
+			bool getBool();
 
 			static const JSONValueType VALUE_TYPE_INVALID;
 			static const JSONValueType VALUE_TYPE_OBJECT;
