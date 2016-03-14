@@ -9,12 +9,15 @@ namespace dapps
 	class DappsSocket : public AbstractClientSocket
 	{
 		DappsServer* m_dappsServer;
+		Buffer m_buffer;
+		std::size_t m_reqBodyLen;
 		
 		public:
 			DappsSocket(DappsServer*);
 			~DappsSocket();
 			void write(char*, std::size_t);
 			void feed(const char*, ssize_t);
+			void parseLength(const char*, ssize_t);
 	};
 }
 
