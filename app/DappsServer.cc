@@ -8,6 +8,7 @@ dapps::DappsServer::DappsServer(dapps::Dapps* _app)
 	m_loop = NULL;
 	m_server = NULL;
 	init();
+	std::cout << "init complete" <<std::endl;
 }
 
 void dapps::DappsServer::init()
@@ -22,9 +23,8 @@ void dapps::DappsServer::init()
 	uv_tcp_init(m_loop, m_server);
 	m_server->data = (void*) this;
 	
-	sockaddr_in _addr;
-	uv_ip4_addr("0.0.0.0", 8081, &_addr);
-	uv_tcp_bind(m_server, (const sockaddr*)&_addr, 0);
+	uv_ip4_addr("0.0.0.0", 8081, &m_addr);
+	uv_tcp_bind(m_server, (const sockaddr*)&m_addr, 0);
 	int r = uv_listen((uv_stream_t*) m_server, 1, DappsServer::onNewConnection);
 	
 	if(r)
@@ -62,6 +62,7 @@ void dapps::DappsServer::rejectIncomingConnection(uv_stream_t* server)
 
 void dapps::DappsServer::onRejectConnection(uv_handle_t* _handle)
 {
+	std::cout << "Rejecting connection" <<std::endl;
 	free(_handle);
 }
 

@@ -1,5 +1,6 @@
 #include "dapps.h"
 #include "commons/json/JSON.h"
+#include <uv.h>
 
 using namespace dapps;
 
@@ -13,6 +14,11 @@ int main(int argc, char** argv)
 		app->registry = new RegistryServer(app);
 	}
 	
+	if(app->args->has("appServer"))
+	{
+		app->appServer = new DappsServer(app);
+	}
+	
 	if(app->args->has("testJSON"))
 	{
 		std::cout << "testing json" << std::endl;
@@ -20,5 +26,6 @@ int main(int argc, char** argv)
 		std::cout << "json parsed size::" << _json->m_val.m_object->size() << std::endl;
 		std::cout << "JSON:: " << JSON::stringify(_json).c_str() <<std::endl;
 	}
+	uv_run(uv_default_loop(), UV_RUN_DEFAULT);
 	return 0;
 }

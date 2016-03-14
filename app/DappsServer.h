@@ -11,6 +11,7 @@ namespace dapps
 		Dapps* m_app;
 		uv_loop_t* m_loop;
 		uv_tcp_t* m_server;
+		struct sockaddr_in m_addr;
 		
 		void init();
 		

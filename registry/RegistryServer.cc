@@ -30,7 +30,6 @@ void dapps::RegistryServer::serverSetup()
 	fprintf(stderr, "Listen error %s\n", uv_strerror(r));
 	}
 	m_logger->log("Server listening\r\n");
-	uv_run(m_loop, UV_RUN_DEFAULT);
 }
 
 void dapps::RegistryServer::rejectIncomingConnection(uv_stream_t* server)
