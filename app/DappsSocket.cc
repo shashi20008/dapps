@@ -1,5 +1,6 @@
 #include "DappsSocket.h"
 #include "../commons/utilities/StringUtils.h"
+#include <iostream>
 
 dapps::DappsSocket::DappsSocket(DappsServer* _dappsServer)
 {
@@ -67,14 +68,16 @@ void dapps::DappsSocket::feed(const char* buf, ssize_t size)
 	{
 		parseLength(buf, size);
 	}
-	else
+	else if(m_buffer.size() < m_reqBodyLen)
 	{
-		m_buffer.append(buf, 0, size);
+		m_buffer.append(buf, size, 0);
 		
 		// @TODO: Implement a setLength so that extra bytes can be ignored.
 		if(m_buffer.size() >= m_reqBodyLen)
 		{
-			std::cout << "Got entire request of " << m_buffer.size() << std::endl;
+			m_buffer.setLength(m_reqBodyLen);
+			std::cout << "Got entire request \"" << m_buffer.c_str() << "\" of " << m_buffer.size() << std::endl;
+			uv_read_stop((uv_stream_t*) m_client);
 		}
 	}
 }

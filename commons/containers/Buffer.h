@@ -31,6 +31,7 @@ namespace dapps
 			bool startsWith(std::string);
 			bool isEmpty();
 			void clear();
+			void setLength(std::size_t);
 			std::string str();
 			char* c_str();
 			char* c_strCopy();

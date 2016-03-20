@@ -1,5 +1,6 @@
 #include "DappsServer.h"
 #include "DappsSocket.h"
+#include <cstdlib>
 #include <iostream>
 
 dapps::DappsServer::DappsServer(dapps::Dapps* _app)
@@ -19,7 +20,7 @@ void dapps::DappsServer::init()
 		return;
 	}
 	m_loop = uv_default_loop();
-	m_server = (uv_tcp_t*) malloc(sizeof(uv_tcp_t*));
+	m_server = (uv_tcp_t*) malloc(sizeof(uv_tcp_t));
 	uv_tcp_init(m_loop, m_server);
 	m_server->data = (void*) this;
 	
