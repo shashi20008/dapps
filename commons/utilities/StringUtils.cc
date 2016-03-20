@@ -54,7 +54,7 @@ std::vector<std::string> dapps::StringUtils::split(std::string strToSplit, char 
 
 std::string dapps::StringUtils::toUpperCase(std::string strToUpper)
 {
-	for( int i = 0; i < strToUpper.length(); i++)
+	for( std::size_t i = 0; i < strToUpper.length(); i++)
 	{
 		strToUpper[i] = toupper(strToUpper[i]);
 	}
@@ -63,7 +63,7 @@ std::string dapps::StringUtils::toUpperCase(std::string strToUpper)
 
 std::string dapps::StringUtils::toLowerCase(std::string strToLower)
 {
-	for( int i = 0; i < strToLower.length(); i++)
+	for( std::size_t i = 0; i < strToLower.length(); i++)
 	{
 		strToLower[i] = toupper(strToLower[i]);
 	}
