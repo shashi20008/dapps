@@ -1,5 +1,7 @@
 #include "DappsSocket.h"
 #include "../commons/utilities/StringUtils.h"
+#include "../commons/json/JSON.h"
+#include "../commons/exceptions/JSONParseException.h"
 #include <iostream>
 
 dapps::DappsSocket::DappsSocket(DappsServer* _dappsServer)
@@ -77,7 +79,16 @@ void dapps::DappsSocket::feed(const char* buf, ssize_t size)
 		{
 			m_buffer.setLength(m_reqBodyLen);
 			std::cout << "Got entire request \"" << m_buffer.c_str() << "\" of " << m_buffer.size() << std::endl;
-			uv_read_stop((uv_stream_t*) m_client);
+			//uv_read_stop((uv_stream_t*) m_client);
+			JSON_t* req;
+			try {
+				req = JSON::parse(m_buffer.c_str());
+			}
+			catch(JSONParseException e)
+			{
+				std::cout << "excecption in json parse" <<std::endl;
+			}
+			std::cout << "parse done:: " << JSON::stringify(req) << std::endl;
 		}
 	}
 }

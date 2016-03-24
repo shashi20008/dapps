@@ -1,7 +1,7 @@
 #ifndef __dapps__DAPPS_REQUEST_PROCESSOR__
 #define __dapps__DAPPS_REQUEST_PROCESSOR__
 
-#include "../commons/containers/JsonTypes.h"
+#include "../commons/containers/JSONTypes.h"
 #include "DappsSocket.h"
 
 namespace dapps

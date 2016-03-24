@@ -1,4 +1,6 @@
 #include "DappsRequestProcessor.h"
+#include <iostream>
+#include "../commons/json/JSON.h"
 
 dapps::DappsRequestProcessor* dapps::DappsRequestProcessor::m_self = NULL;
 dapps::DappsRequestProcessor* dapps::DappsRequestProcessor::get()
@@ -12,4 +14,6 @@ dapps::DappsRequestProcessor* dapps::DappsRequestProcessor::get()
 
 void dapps::DappsRequestProcessor::process(dapps::JSON_t* request, dapps::DappsSocket* socket)
 {
+	std::cout << "came to process.. Got:: " << JSON::stringify(request) << std::endl;
+	
 }
