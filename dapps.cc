@@ -9,6 +9,14 @@ int main(int argc, char** argv)
 	Dapps* app = new Dapps();
 	app->args = new ArgsProcessor(argc, argv);
 	app->loggingUtil = new LoggingUtil();
+	if(app->args->has("config"))
+	{
+		ArgsValList* configFiles = app->args->get("config");
+		if(configFiles != NULL && configFiles->size() > 0)
+		{
+			app->config = new ConfigProcessor(configFiles->at(0));
+		}
+	}
 
 	if(app->args->has("registry")){
 		app->registry = new RegistryServer(app);

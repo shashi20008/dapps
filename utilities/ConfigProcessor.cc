@@ -28,3 +28,8 @@ dapps::ConfigProcessor::ConfigProcessor(std::string filename)
 		throw DappsException("could not open config file " + filename);
 	}
 }
+
+dapps::JSON_t* dapps::ConfigProcessor::getConfig()
+{
+	return m_config;
+}

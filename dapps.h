@@ -3,6 +3,7 @@
 
 #include "dapps-common.h"
 #include "utilities/ArgsProcessor.h"
+#include "utilities/ConfigProcessor.h"
 #include "registry/RegistryServer.h"
 #include "app/DappsServer.h"
 #include "commons/utilities/LoggingUtil.h"
@@ -16,6 +17,7 @@ namespace dapps
 	{
 		public:
 			ArgsProcessor* args;
+			ConfigProcessor* config; 
 			RegistryServer* registry;
 			DappsServer* appServer;
 			LoggingUtil* loggingUtil;

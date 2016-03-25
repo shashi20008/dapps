@@ -11,7 +11,7 @@ namespace dapps
 			JSON_t* m_config;
 		public:
 			ConfigProcessor(std::string filename);
-			
+			JSON_t* getConfig();
 	};
 }
 
