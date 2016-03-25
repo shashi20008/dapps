@@ -1,4 +1,5 @@
 #include "DappsApplication.h"
+#include <iostream>
 
 const std::string dapps::DappsApplication::DAPPS_CONFIG_FILENAME = "dapps.json";
 
@@ -6,6 +7,7 @@ dapps::DappsApplication::DappsApplication(std::string path)
 {
 	m_appPath = path;
 	loadConfig();
+	updateDB();
 }
 
 // @TODO: check if its worth making async
@@ -13,7 +15,16 @@ void dapps::DappsApplication::loadConfig()
 {
 	std::string configFilePath = m_appPath + DappsApplication::DAPPS_CONFIG_FILENAME;
 	m_appConfig = new ConfigProcessor(configFilePath);
+	m_appName = m_appConfig->getConfig()->getString("AppName");
+	m_appExecutableName = m_appConfig->getConfig()->getString("main");
+	m_appType = m_appConfig->getConfig()->getString("type");
 	
+	std::cout << m_appName << m_appExecutableName << m_appType << std::endl;
+}
+
+//@TODO: Add implementation to update this app's details in DB.
+void dapps::DappsApplication::updateDB()
+{
 }
 
 std::string dapps::DappsApplication::getAppPath()
