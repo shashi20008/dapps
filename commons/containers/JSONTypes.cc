@@ -1,5 +1,6 @@
 #include "JSONTypes.h"
 #include "../exceptions/DappsException.h"
+#include <stdexcept>
 
 const dapps::JSONValueType dapps::JSON_t::VALUE_TYPE_INVALID = -1;
 const dapps::JSONValueType dapps::JSON_t::VALUE_TYPE_OBJECT = 0;
@@ -62,4 +63,157 @@ bool dapps::JSON_t::getBool()
 		throw DappsException("tried to get boolean on non boolean json type.");
 	}
 	return this->m_val.m_bool;
+}
+
+// Object accessors.
+dapps::JSONObject* dapps::JSON_t::getObject(std::string key)
+{
+	JSONObject* _obj = getObject();
+	JSONObject::iterator it = _obj->find(key);
+	if(it == _obj->end()) 
+	{
+		throw DappsException("No such key in JSON Object");
+	}
+	return it->second->getObject();
+}
+
+dapps::JSONArray* dapps::JSON_t::getArray(std::string key)
+{
+	JSONObject* _obj = getObject();
+	JSONObject::iterator it = _obj->find(key);
+	if(it == _obj->end()) 
+	{
+		throw DappsException("No such key in JSON Object");
+	}
+	return it->second->getArray();
+}
+
+std::string dapps::JSON_t::getString(std::string key)
+{
+	JSONObject* _obj = getObject();
+	JSONObject::iterator it = _obj->find(key);
+	if(it == _obj->end()) 
+	{
+		throw DappsException("No such key in JSON Object");
+	}
+	return it->second->getString();
+}
+
+double dapps::JSON_t::getDouble(std::string key)
+{
+	JSONObject* _obj = getObject();
+	JSONObject::iterator it = _obj->find(key);
+	if(it == _obj->end()) 
+	{
+		throw DappsException("No such key in JSON Object");
+	}
+	return it->second->getDouble();
+}
+
+int64_t dapps::JSON_t::getInt(std::string key)
+{
+	JSONObject* _obj = getObject();
+	JSONObject::iterator it = _obj->find(key);
+	if(it == _obj->end()) 
+	{
+		throw DappsException("No such key in JSON Object");
+	}
+	return it->second->getInt();
+}
+
+bool dapps::JSON_t::getBool(std::string key)
+{
+	JSONObject* _obj = getObject();
+	JSONObject::iterator it = _obj->find(key);
+	if(it == _obj->end()) 
+	{
+		throw DappsException("No such key in JSON Object");
+	}
+	return it->second->getBool();
+}
+
+
+// Array accessors.
+dapps::JSONObject* dapps::JSON_t::getObject(std::size_t index)
+{
+	JSONArray* _obj = getArray();
+	if(index < _obj->size()) 
+	{
+		JSON_t* _json = _obj->at(index);
+		return _json->getObject();
+	}
+	else {
+		throw DappsException("Index out of range in JSON Array");
+	}
+	return NULL;
+}
+
+dapps::JSONArray* dapps::JSON_t::getArray(std::size_t index)
+{
+	JSONArray* _obj = getArray();
+	if(index < _obj->size()) 
+	{
+		JSON_t* _json = _obj->at(index);
+		return _json->getArray();
+	}
+	else {
+		throw DappsException("Index out of range in JSON Array");
+	}
+	return NULL;
+}
+
+std::string dapps::JSON_t::getString(std::size_t index)
+{
+	JSONArray* _obj = getArray();
+	if(index < _obj->size()) 
+	{
+		JSON_t* _json = _obj->at(index);
+		return _json->getString();
+	}
+	else {
+		throw DappsException("Index out of range in JSON Array");
+	}
+	return NULL;
+}
+
+double dapps::JSON_t::getDouble(std::size_t index)
+{
+	JSONArray* _obj = getArray();
+	if(index < _obj->size()) 
+	{
+		JSON_t* _json = _obj->at(index);
+		return _json->getDouble();
+	}
+	else {
+		throw DappsException("Index out of range in JSON Array");
+	}
+	return 0.0;
+}
+
+int64_t dapps::JSON_t::getInt(std::size_t index)
+{
+	JSONArray* _obj = getArray();
+	if(index < _obj->size()) 
+	{
+		JSON_t* _json = _obj->at(index);
+		return _json->getInt();
+	}
+	else {
+		throw DappsException("Index out of range in JSON Array");
+	}
+	return 0;
+}
+
+bool dapps::JSON_t::getBool(std::size_t index)
+{
+	JSONArray* _obj = getArray();
+	if(index < _obj->size()) 
+	{
+		JSON_t* _json = _obj->at(index);
+		return _json->getBool();
+	}
+	else {
+		throw DappsException("Index out of range in JSON Array");
+	}
+	return NULL;
 }
