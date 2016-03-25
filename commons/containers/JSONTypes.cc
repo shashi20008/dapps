@@ -53,7 +53,7 @@ int64_t dapps::JSON_t::getInt()
 	{
 		throw DappsException("tried to get Integer on non Integer json type.");
 	}
-	return this->m_val.m_floatVal;
+	return this->m_val.m_intVal;
 }
 
 bool dapps::JSON_t::getBool()
