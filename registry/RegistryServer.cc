@@ -22,7 +22,14 @@ void dapps::RegistryServer::serverSetup()
 
 	// Save current object reference for use in callbacks
 	m_server->data = this;
-	uv_ip4_addr("0.0.0.0", 8080, &m_addr);
+	
+	std::string ipAddress = m_app->config->getConfig()->get("registry")->getString("host");
+	int64_t port = m_app->config->getConfig()->get("registry")->getInt("port");
+	
+	std::cout <<"ip: " << ipAddress << ", port: " << port << std::endl;
+	std::cout <<  JSON::stringify(m_app->config->getConfig()) <<std::endl;
+	
+	uv_ip4_addr(ipAddress.c_str(), port, &m_addr);
 	uv_tcp_bind(m_server, (const struct sockaddr*)&m_addr, 0);
 
 	int r = uv_listen((uv_stream_t*) m_server, 1, this->onNewConnection);
