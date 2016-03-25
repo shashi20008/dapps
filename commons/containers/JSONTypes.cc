@@ -66,6 +66,17 @@ bool dapps::JSON_t::getBool()
 }
 
 // Object accessors.
+dapps::JSON_t* dapps::JSON_t::get(std::string key)
+{
+	JSONObject* _obj = getObject();
+	JSONObject::iterator it = _obj->find(key);
+	if(it == _obj->end()) 
+	{
+		throw DappsException("No such key in JSON Object");
+	}
+	return it->second;
+}
+
 dapps::JSONObject* dapps::JSON_t::getObject(std::string key)
 {
 	JSONObject* _obj = getObject();
@@ -134,6 +145,19 @@ bool dapps::JSON_t::getBool(std::string key)
 
 
 // Array accessors.
+dapps::JSON_t* dapps::JSON_t::get(std::size_t index)
+{
+	JSONArray* _obj = getArray();
+	if(index < _obj->size()) 
+	{
+		return _obj->at(index);
+	}
+	else {
+		throw DappsException("Index out of range in JSON Array");
+	}
+	return NULL;
+}
+
 dapps::JSONObject* dapps::JSON_t::getObject(std::size_t index)
 {
 	JSONArray* _obj = getArray();

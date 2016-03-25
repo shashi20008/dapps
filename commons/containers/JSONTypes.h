@@ -39,6 +39,7 @@ namespace dapps
 			bool getBool();
 			
 			// JSON Obj accessors
+			JSON_t* get(std::string);
 			JSONObject* getObject(std::string);
 			JSONArray* getArray(std::string);
 			std::string getString(std::string);
@@ -47,6 +48,7 @@ namespace dapps
 			bool getBool(std::string);
 			
 			// JSON Array accessors
+			JSON_t* get(std::size_t);
 			JSONObject* getObject(std::size_t);
 			JSONArray* getArray(std::size_t);
 			std::string getString(std::size_t);
