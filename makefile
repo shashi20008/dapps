@@ -12,6 +12,7 @@ SRCS=dapps.cc \
 	app/DappsServer.cc \
 	app/DappsSocket.cc \
 	app/DappsRequestProcessor.cc \
+	app/DappsApplication.cc \
 	utilities/ArgsProcessor.cc \
 	utilities/ConfigProcessor.cc \
 	commons/json/JSON.cc \
