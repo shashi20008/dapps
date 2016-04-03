@@ -24,6 +24,7 @@ namespace dapps
 			std::string getAppExecutableName();
 			std::string getAppType();
 			std::string getAppName();
+			void updateDB();
 			
 			const static std::string DAPPS_CONFIG_FILENAME;
 	};
