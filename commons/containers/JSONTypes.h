@@ -63,6 +63,7 @@ namespace dapps
 			static const JSONValueType VALUE_TYPE_FLOAT;
 			static const JSONValueType VALUE_TYPE_INTEGER;
 			static const JSONValueType VALUE_TYPE_BOOLEAN;
+			static const JSONValueType VALUE_TYPE_NULL;
 	};
 	
 }

@@ -269,6 +269,10 @@ dapps::JSON_t* dapps::JSON::parseBoolean(std::string& input, uint64_t& counter)
 	{
 		_val->m_val.m_bool = false;
 	}
+	else if(strcmp(token, "null") == 0) 
+	{
+		_val->m_type = JSON_t::VALUE_TYPE_NULL;
+	}
 	else 
 	{
 		throw JSONParseException("Invalid JSON object");
@@ -288,6 +292,24 @@ dapps::JSON_t* dapps::JSON::parseArray(std::string& input, uint64_t& counter)
 	
 	JSONArray* _array = new JSONArray();
 	skipWhiteSpace(input, counter);
+	
+	bool hasMoreElements = true;
+	while(input[counter] != ']' && hasMoreElements)
+	{
+		JSONParserFunc parser = getParserFunc(input, counter);
+		JSON_t* _elem = parser(input, counter);
+		_array->push_back(_elem);
+		skipWhiteSpace(input, counter);
+		if(input[counter] != ',')
+		{
+			hasMoreElements = false;
+		}
+		else
+		{
+			counter++;
+		}
+		skipWhiteSpace(input, counter);
+	}
 	
 	JSON_t* _container = new JSON_t();
 	_container->m_type = JSON_t::VALUE_TYPE_ARRAY;

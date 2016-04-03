@@ -9,6 +9,7 @@ const dapps::JSONValueType dapps::JSON_t::VALUE_TYPE_STRING = 2;
 const dapps::JSONValueType dapps::JSON_t::VALUE_TYPE_FLOAT = 3;
 const dapps::JSONValueType dapps::JSON_t::VALUE_TYPE_INTEGER = 4;
 const dapps::JSONValueType dapps::JSON_t::VALUE_TYPE_BOOLEAN = 5;
+const dapps::JSONValueType dapps::JSON_t::VALUE_TYPE_NULL = 6;
 
 
 dapps::JSONObject* dapps::JSON_t::getObject()
