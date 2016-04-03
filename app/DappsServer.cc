@@ -1,5 +1,6 @@
 #include "DappsServer.h"
 #include "DappsSocket.h"
+#include "DappsApplicationFactory.h"
 #include <cstdlib>
 #include <iostream>
 
@@ -33,7 +34,16 @@ void dapps::DappsServer::init()
 	
 	if(r)
 	{
-		std::cout << "something went wrong" << std::endl;
+		throw DappsException("Couldn't start Dapps application server.");
+	}
+	
+	ArgsValList* appsDir = m_app->args->get("appsDir");
+	if(appsDir != NULL && appsDir->size() > 0)
+	{
+		DappsApplicationFactory::initialize(appsDir->at(0));
+	} else 
+	{
+		throw DappsException("No Applications deployment directory specified.");
 	}
 }
 

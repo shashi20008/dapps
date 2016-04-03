@@ -1,0 +1,5 @@
+{
+	"AppName": "temp",
+	"main": "test.sh",
+	"type": "cgi"
+}

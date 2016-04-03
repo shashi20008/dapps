@@ -13,12 +13,14 @@ SRCS=dapps.cc \
 	app/DappsSocket.cc \
 	app/DappsRequestProcessor.cc \
 	app/DappsApplication.cc \
+	app/DappsApplicationFactory.cc \
 	utilities/ArgsProcessor.cc \
 	utilities/ConfigProcessor.cc \
 	commons/json/JSON.cc \
 	commons/containers/JSONTypes.cc \
 	commons/utilities/StringUtils.cc \
 	commons/utilities/LoggingUtil.cc \
+	commons/utilities/PathUtils.cc \
 	commons/exceptions/DappsException.cc \
 	commons/exceptions/JSONParseException.cc \
 	commons/exceptions/OutOfBoundsException.cc \
