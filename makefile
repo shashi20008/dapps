@@ -14,6 +14,8 @@ SRCS=dapps.cc \
 	app/DappsRequestProcessor.cc \
 	app/DappsApplication.cc \
 	app/DappsApplicationFactory.cc \
+	app/bindings/Executor.cc \
+	app/bindings/CgiExecutor.cc \
 	utilities/ArgsProcessor.cc \
 	utilities/ConfigProcessor.cc \
 	commons/json/JSON.cc \

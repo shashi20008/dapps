@@ -21,6 +21,7 @@ namespace dapps
 		
 		public:
 			static void initialize(std::string);
+			static DappsApplication* getApp(std::string);
 	};
 }
 

@@ -14,6 +14,7 @@ namespace dapps
 		std::string m_appExecutableName;
 		std::string m_appType;
 		std::string m_appName;
+		std::string m_mountPath;
 		
 		void loadConfig();
 		

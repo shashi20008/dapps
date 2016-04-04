@@ -1,5 +1,6 @@
 #include "DappsApplicationFactory.h"
 #include "DappsApplication.h"
+#include "bindings/CgiExecutor.h"
 #include "../commons/exceptions/DappsException.h"
 #include "../commons/utilities/PathUtils.h"
 #include <iostream>
@@ -38,15 +39,27 @@ void dapps::DappsApplicationFactory::onScan(uv_fs_t* _req)
 		{
 			DappsApplication* _app = new DappsApplication(fullPath);
 			m_applications->insert(ApplicationsPair(_app->getAppName(), _app));
+			CgiExecutor* _executor = new CgiExecutor();
+			_executor->execute(_app, "");
 		}
 		catch(DappsException e)
 		{
 			std::cout << "couldn't load application in dir:: " << fullPath << std::endl;
-			std::cout << "\t because: " << e.what() << std::endl;
+			std::cout << "\tbecause: " << e.what() << std::endl;
 		}
 		
 		delete[] fullPath;
 	}
 	uv_fs_req_cleanup(_req);
 	free(_req);
+}
+
+dapps::DappsApplication* dapps::DappsApplicationFactory::getApp(std::string _name)
+{
+	ApplicationsMap::iterator it = m_applications->find(_name);
+	if(it !=  m_applications->end())
+	{
+		return it->second;
+	}
+	return NULL;
 }

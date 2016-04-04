@@ -1,4 +1,5 @@
 #include "DappsApplication.h"
+#include "../commons/exceptions/DappsException.h"
 #include "../commons/utilities/PathUtils.h"
 #include <iostream>
 
@@ -6,6 +7,7 @@ const std::string dapps::DappsApplication::DAPPS_CONFIG_FILENAME = "dapps.json";
 
 dapps::DappsApplication::DappsApplication(std::string path)
 {
+	std::cout << "path from app:: " << path <<std::endl;
 	m_appPath = path;
 	loadConfig();
 	updateDB();
@@ -16,9 +18,17 @@ void dapps::DappsApplication::loadConfig()
 {
 	std::string configFilePath = PathUtils::join(m_appPath.c_str(), DappsApplication::DAPPS_CONFIG_FILENAME.c_str());
 	m_appConfig = new ConfigProcessor(configFilePath);
-	m_appName = m_appConfig->getConfig()->getString("AppName");
-	m_appExecutableName = m_appConfig->getConfig()->getString("main");
-	m_appType = m_appConfig->getConfig()->getString("type");
+	JSON_t* config =  m_appConfig->getConfig();
+	m_appName = config->getString("AppName");
+	m_appExecutableName = config->getString("main");
+	m_appType = config->getString("type");
+	try
+	{
+		m_mountPath = config->getString("mountPath");
+	}
+	catch(DappsException e)
+	{
+	}
 }
 
 //@TODO: Add implementation to update this app's details in DB.

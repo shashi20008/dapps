@@ -73,7 +73,7 @@ dapps::JSON_t* dapps::JSON_t::get(std::string key)
 	JSONObject::iterator it = _obj->find(key);
 	if(it == _obj->end()) 
 	{
-		throw DappsException("No such key in JSON Object");
+		throw DappsException("No such key in JSON Object:: " + key);
 	}
 	return it->second;
 }
@@ -84,7 +84,7 @@ dapps::JSONObject* dapps::JSON_t::getObject(std::string key)
 	JSONObject::iterator it = _obj->find(key);
 	if(it == _obj->end()) 
 	{
-		throw DappsException("No such key in JSON Object");
+		throw DappsException("No such key in JSON Object:: " + key);
 	}
 	return it->second->getObject();
 }
@@ -95,7 +95,7 @@ dapps::JSONArray* dapps::JSON_t::getArray(std::string key)
 	JSONObject::iterator it = _obj->find(key);
 	if(it == _obj->end()) 
 	{
-		throw DappsException("No such key in JSON Object");
+		throw DappsException("No such key in JSON Object:: " + key);
 	}
 	return it->second->getArray();
 }
@@ -106,7 +106,7 @@ std::string dapps::JSON_t::getString(std::string key)
 	JSONObject::iterator it = _obj->find(key);
 	if(it == _obj->end()) 
 	{
-		throw DappsException("No such key in JSON Object");
+		throw DappsException("No such key in JSON Object:: " + key);
 	}
 	return it->second->getString();
 }
@@ -117,7 +117,7 @@ double dapps::JSON_t::getDouble(std::string key)
 	JSONObject::iterator it = _obj->find(key);
 	if(it == _obj->end()) 
 	{
-		throw DappsException("No such key in JSON Object");
+		throw DappsException("No such key in JSON Object:: " + key);
 	}
 	return it->second->getDouble();
 }
@@ -128,7 +128,7 @@ int64_t dapps::JSON_t::getInt(std::string key)
 	JSONObject::iterator it = _obj->find(key);
 	if(it == _obj->end()) 
 	{
-		throw DappsException("No such key in JSON Object");
+		throw DappsException("No such key in JSON Object:: " + key);
 	}
 	return it->second->getInt();
 }
@@ -139,7 +139,7 @@ bool dapps::JSON_t::getBool(std::string key)
 	JSONObject::iterator it = _obj->find(key);
 	if(it == _obj->end()) 
 	{
-		throw DappsException("No such key in JSON Object");
+		throw DappsException("No such key in JSON Object:: " + key);
 	}
 	return it->second->getBool();
 }
