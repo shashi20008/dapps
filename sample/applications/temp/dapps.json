@@ -1,0 +1,6 @@
+{
+	"AppName": "temp",
+	"main": "test.sh",
+	"type": "cgi",
+	"mountPath": "temp"
+}

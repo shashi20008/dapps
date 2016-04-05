@@ -9,11 +9,20 @@ SRCS=dapps.cc \
 	registry/RegistryServer.cc \
 	registry/ClientSocket.cc \
 	registry/RegistryRequestProcessor.cc \
+	app/DappsServer.cc \
+	app/DappsSocket.cc \
+	app/DappsRequestProcessor.cc \
+	app/DappsApplication.cc \
+	app/DappsApplicationFactory.cc \
+	app/bindings/Executor.cc \
+	app/bindings/CgiExecutor.cc \
 	utilities/ArgsProcessor.cc \
+	utilities/ConfigProcessor.cc \
 	commons/json/JSON.cc \
 	commons/containers/JSONTypes.cc \
 	commons/utilities/StringUtils.cc \
 	commons/utilities/LoggingUtil.cc \
+	commons/utilities/PathUtils.cc \
 	commons/exceptions/DappsException.cc \
 	commons/exceptions/JSONParseException.cc \
 	commons/exceptions/OutOfBoundsException.cc \

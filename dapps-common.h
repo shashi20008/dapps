@@ -5,6 +5,7 @@ namespace dapps
 	// Forward declarations to satisfy circular dependencies
 	class Dapps;
 	class RegistryServer;
+	class DappsServer;
 	class JSON;
 	class LoggingUtil;
 	class StringUtils;

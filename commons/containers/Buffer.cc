@@ -95,6 +95,16 @@ void dapps::Buffer::clear()
 	m_value[m_loc] = '\0';
 }
 
+void dapps::Buffer::setLength(std::size_t newSize)
+{
+	if(m_loc < newSize)
+	{
+		return; // Can't go beyond boundaries.
+	}
+	m_loc = newSize;
+	m_value[m_loc] = '\0';
+}
+
 std::string dapps::Buffer::str()
 {
 	std::string str = m_value;

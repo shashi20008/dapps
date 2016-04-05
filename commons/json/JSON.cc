@@ -20,7 +20,7 @@ dapps::JSON_t* dapps::JSON::parse(std::string input)
 	}
 	else
 	{
-		throw new JSONParseException("Invalid JSON object");
+		throw JSONParseException("Invalid JSON object");
 	}
 	return NULL;
 }
@@ -41,7 +41,7 @@ dapps::JSON_t* dapps::JSON::parseObject(std::string& input, uint64_t& counter)
 	char cur = input[counter];
 	if(cur != '{')
 	{
-		throw new JSONParseException("Invalid JSON object");
+		throw JSONParseException("Invalid JSON object");
 	}
 	JSONObject* _object = new JSONObject();
 	counter++;
@@ -55,7 +55,7 @@ dapps::JSON_t* dapps::JSON::parseObject(std::string& input, uint64_t& counter)
 		
 		if(parser == NULL) {
 			// Invalid JSON. Throw
-			throw new JSONParseException("Invalid JSON object");
+			throw JSONParseException("Invalid JSON object");
 		}
 		JSON_t* _val = (*parser) (input, counter);
 		
@@ -75,7 +75,7 @@ dapps::JSON_t* dapps::JSON::parseObject(std::string& input, uint64_t& counter)
 		else
 		{
 			// @TODO: throw
-			throw new JSONParseException("Invalid JSON object");
+			throw JSONParseException("Invalid JSON object");
 		}
 		
 		skipWhiteSpace(input, counter);
@@ -94,8 +94,7 @@ dapps::JSON_t* dapps::JSON::parseString(std::string& input, uint64_t& counter)
 {
 	if(input[counter] != '"')
 	{
-		// throw instead.
-		throw new JSONParseException("Invalid JSON object");
+		throw JSONParseException("Invalid JSON object");
 	}
 	std::string str = "";
 	char* strBuffer = new char[101];
@@ -141,9 +140,7 @@ dapps::JSON_t* dapps::JSON::parseNumber(std::string& input, uint64_t& counter)
 	
 	if((cur < '0' || cur > '9') && cur != '-')
 	{
-		// not a number.
-		// throw
-		throw new JSONParseException("Invalid JSON object");
+		throw JSONParseException("Invalid JSON object");
 	}
 	std::string numStr = "";
 	char* numBuffer = new char[101];
@@ -213,7 +210,7 @@ std::string dapps::JSON::parseKey(std::string& input, uint64_t& counter)
 {
 	if(input[counter] != '"')
 	{
-		throw new JSONParseException("Invalid JSON object");
+		throw JSONParseException("Invalid JSON object");
 	}
 	std::string key = "";
 	char* keyBuffer = new char[101];
@@ -240,7 +237,7 @@ std::string dapps::JSON::parseKey(std::string& input, uint64_t& counter)
 	skipWhiteSpace(input, counter);
 	if(input[counter] != ':')
 	{
-		throw new JSONParseException("Invalid JSON object");
+		throw JSONParseException("Invalid JSON object");
 	}
 	counter++;
 	skipWhiteSpace(input, counter);
@@ -272,6 +269,10 @@ dapps::JSON_t* dapps::JSON::parseBoolean(std::string& input, uint64_t& counter)
 	{
 		_val->m_val.m_bool = false;
 	}
+	else if(strcmp(token, "null") == 0) 
+	{
+		_val->m_type = JSON_t::VALUE_TYPE_NULL;
+	}
 	else 
 	{
 		throw JSONParseException("Invalid JSON object");
@@ -286,11 +287,29 @@ dapps::JSON_t* dapps::JSON::parseBoolean(std::string& input, uint64_t& counter)
 dapps::JSON_t* dapps::JSON::parseArray(std::string& input, uint64_t& counter)
 {
 	if(input[counter] != '[') {
-		throw new JSONParseException("Invalid JSON object");
+		throw JSONParseException("Invalid JSON object");
 	}
 	
 	JSONArray* _array = new JSONArray();
 	skipWhiteSpace(input, counter);
+	
+	bool hasMoreElements = true;
+	while(input[counter] != ']' && hasMoreElements)
+	{
+		JSONParserFunc parser = getParserFunc(input, counter);
+		JSON_t* _elem = parser(input, counter);
+		_array->push_back(_elem);
+		skipWhiteSpace(input, counter);
+		if(input[counter] != ',')
+		{
+			hasMoreElements = false;
+		}
+		else
+		{
+			counter++;
+		}
+		skipWhiteSpace(input, counter);
+	}
 	
 	JSON_t* _container = new JSON_t();
 	_container->m_type = JSON_t::VALUE_TYPE_ARRAY;
