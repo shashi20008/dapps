@@ -47,7 +47,6 @@ std::string dapps::MongoClient::getApplicationIdByURI (const char* uri)
 
 std::string getServer (std::string appIdStr )
 {
-	uint32_t length;
 	int appId;
 	dapps::StringUtils::fromString( appIdStr, &appId);
 	mongoc_cursor_t* cursor;
@@ -72,6 +71,7 @@ std::string getServer (std::string appIdStr )
 	bson_iter_t itr;
  	std::string key;
  	double value;
+ 	int firstVal=0;
 
 	mongoc_client_t* m_mongoClient = mongoc_client_new("mongodb://127.0.0.1/");
 	mongoc_collection_t* m_serversCollection = mongoc_client_get_collection(m_mongoClient, "dapps", "servers");
@@ -86,6 +86,11 @@ std::string getServer (std::string appIdStr )
 				if(key == "load")
 				{
 					value = bson_iter_double (&itr);
+					if(firstVal == 0){
+						minValue = value;
+						firstVal++;
+					}
+
 					if(value < minValue){
 						minValue = value;
 						dapps::ServerSchema* schemaObject = dapps::ServerSchema::getDocument(resDoc);
