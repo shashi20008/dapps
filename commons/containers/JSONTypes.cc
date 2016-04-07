@@ -240,5 +240,5 @@ bool dapps::JSON_t::getBool(std::size_t index)
 	else {
 		throw DappsException("Index out of range in JSON Array");
 	}
-	return NULL;
+	return false;
 }
