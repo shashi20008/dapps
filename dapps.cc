@@ -17,6 +17,13 @@ int main(int argc, char** argv)
 			app->config = new ConfigProcessor(configFiles->at(0));
 		}
 	}
+	
+	if(app->config == NULL)
+	{
+		std::cout << "Usage: ./dapps --config \"path/to/config\" [--registry] [--appServer]" << std::endl << std::endl;
+		std::cout << "No configuration found. Exiting.." << std::endl;
+		return 0;
+	}
 
 	if(app->args->has("registry")){
 		app->registry = new RegistryServer(app);
