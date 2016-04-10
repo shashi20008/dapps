@@ -23,7 +23,7 @@ bson_t* dapps::MongoClient::getApplicationByURI(const char* uri)
 	bson_t* query;
 	const bson_t* resDoc;
 	mongoc_cursor_t* cursor;
-	query = BCON_NEW("uriPattern", uri);
+	query = BCON_NEW("mountPoint", uri);
 	cursor = mongoc_collection_find(m_appsCollection, MONGOC_QUERY_NONE, 0, 0, 0, query, NULL, NULL);
 	if(mongoc_cursor_next(cursor, &resDoc))
 	{
@@ -37,10 +37,23 @@ std::string dapps::MongoClient::getApplicationIdByURI (const char* uri)
 	bson_iter_t itr;
 	uint32_t length;
 	bson_t* doc = getApplicationByURI(uri);
-	if(doc && bson_has_field(doc, "uriPattern") && bson_iter_init(&itr, doc) && bson_iter_find(&itr, "appId"))
+	if(doc && bson_has_field(doc, "mountPoint") && bson_iter_init(&itr, doc) && bson_iter_find(&itr, "appId"))
 	{
 		std::string appId = bson_iter_utf8(&itr, &length);
 		return appId;
+	}
+	return "";
+}
+
+std::string dapps::MongoClient::getApplicationName(const char* uri)
+{
+	bson_iter_t itr;
+	uint32_t length;
+	bson_t* doc = getApplicationByURI(uri);
+	if(doc && bson_has_field(doc, "mountPoint") && bson_iter_init(&itr, doc) && bson_iter_find(&itr, "appName"))
+	{
+		std::string appName = bson_iter_utf8(&itr, &length);
+		return appName;
 	}
 	return "";
 }

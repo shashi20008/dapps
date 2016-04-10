@@ -58,6 +58,9 @@ void dapps::DappsSocket::parseLength(const char* buf, ssize_t size)
 				// @TODO: return error response.
 				throw DappsException("Invalid request body length");
 			}
+			
+			i++;
+			break;
 		}
 	}
 	if(i < size)
@@ -68,6 +71,7 @@ void dapps::DappsSocket::parseLength(const char* buf, ssize_t size)
 
 void dapps::DappsSocket::feed(const char* buf, ssize_t size)
 {
+	std::cout<<"Got request:" << buf << "size:: " << size << std::endl;
 	if(!m_reqBodyLen)
 	{
 		parseLength(buf, size);
@@ -87,7 +91,7 @@ void dapps::DappsSocket::feed(const char* buf, ssize_t size)
 			}
 			catch(JSONParseException e)
 			{
-				std::cout << "excecption in json parse" <<std::endl;
+				std::cout << "excecption in json parse.. buffer was: " << m_buffer.c_str() <<std::endl;
 				// Clean up here.
 				return;
 			}
