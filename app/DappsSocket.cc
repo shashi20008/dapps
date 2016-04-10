@@ -36,7 +36,7 @@ void dapps::DappsSocket::write(char* buffer, std::size_t length)
 	
 	uvBuffer->base = buffer;
 	uvBuffer->len = length;
-	std::cout << "writing" << uvBuffer->base << std::endl;
+	
 	uv_write(writeReq, (uv_stream_t*)m_client, uvBuffer, 1, onWriteComplete);
 }
 
