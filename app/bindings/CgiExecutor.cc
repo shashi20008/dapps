@@ -39,8 +39,10 @@ void dapps::CgiExecutor::initializeProcessOptions(uv_process_options_t* options,
     options->gid = 0;
 }
 
-void dapps::CgiExecutor::execute(DappsApplication* app, std::string args)
+void dapps::CgiExecutor::execute(DappsApplication* app, DappsSocket* socket, JSON_t* req, std::string args)
 {
+	m_socket = socket;
+	m_request = req;
 	uv_loop_t* _loop = uv_default_loop();
 	
 	m_outputPipe = (uv_pipe_t*) malloc(sizeof(uv_pipe_t));
@@ -80,7 +82,8 @@ void dapps::CgiExecutor::onRead(uv_stream_t* _pipe, ssize_t nread, const uv_buf_
 	}
 }
 
-void dapps::CgiExecutor::allocBuffer(uv_handle_t* handle,size_t suggested_size,uv_buf_t* buf) {
+void dapps::CgiExecutor::allocBuffer(uv_handle_t* handle,size_t suggested_size,uv_buf_t* buf) 
+{
 	buf->base = (char*) malloc(suggested_size);
 	buf->len = suggested_size;
 }
@@ -88,9 +91,9 @@ void dapps::CgiExecutor::allocBuffer(uv_handle_t* handle,size_t suggested_size,u
 void dapps::CgiExecutor::onExit(uv_process_t* processReq, int64_t exitStatus, int termSignal)
 {
 	CgiExecutor* _this = (CgiExecutor*) processReq->data;
-	std::cout << "Process exited" << std::endl;
-	std::cout << "output:: " << _this->m_output.c_str() << std::endl;
 	uv_read_stop((uv_stream_t*)_this->m_outputPipe);
+	
+	//_this->m_socket->write(_this->m_output.c_str(), _this->m_output.size());
 	uv_close((uv_handle_t*) processReq, cleanup);
 }
 

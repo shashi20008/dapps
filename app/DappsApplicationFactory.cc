@@ -39,8 +39,6 @@ void dapps::DappsApplicationFactory::onScan(uv_fs_t* _req)
 		{
 			DappsApplication* _app = new DappsApplication(fullPath);
 			m_applications->insert(ApplicationsPair(_app->getAppName(), _app));
-			CgiExecutor* _executor = new CgiExecutor();
-			_executor->execute(_app, "");
 		}
 		catch(DappsException e)
 		{

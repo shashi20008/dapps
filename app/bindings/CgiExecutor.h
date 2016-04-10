@@ -11,6 +11,9 @@ namespace dapps
 	{
 		uv_pipe_t* m_outputPipe;
 		Buffer m_output;
+		DappsSocket* m_socket;
+		JSON_t* m_request;
+		
 		void initializeProcessOptions(uv_process_options_t*, dapps::DappsApplication*, std::string);
 		static void allocBuffer(uv_handle_t*,size_t,uv_buf_t*);
 		static void onRead(uv_stream_t*, ssize_t, const uv_buf_t*);
@@ -19,7 +22,7 @@ namespace dapps
 		public:
 			CgiExecutor();
 			~CgiExecutor();
-			void execute(DappsApplication*, std::string args);
+			void execute(DappsApplication*, DappsSocket*, JSON_t*, std::string);
 	};
 }
 

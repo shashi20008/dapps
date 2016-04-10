@@ -3,6 +3,8 @@
 
 #include <string>
 #include "../DappsApplication.h"
+#include "../../commons/containers/JSONTypes.h"
+#include "../DappsSocket.h"
 
 namespace dapps
 {
@@ -10,7 +12,8 @@ namespace dapps
 	{
 		public:
 			~Executor();
-			virtual void execute(DappsApplication*, std::string args) = 0;
+			virtual void execute(DappsApplication*, DappsSocket*, JSON_t*, std::string) = 0;
+			static Executor* create(std::string);
 	};
 }
 

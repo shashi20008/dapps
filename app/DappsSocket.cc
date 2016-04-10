@@ -36,6 +36,7 @@ void dapps::DappsSocket::write(char* buffer, std::size_t length)
 	
 	uvBuffer->base = buffer;
 	uvBuffer->len = length;
+	std::cout << "writing" << uvBuffer->base << std::endl;
 	uv_write(writeReq, (uv_stream_t*)m_client, uvBuffer, 1, onWriteComplete);
 }
 
@@ -79,8 +80,7 @@ void dapps::DappsSocket::feed(const char* buf, ssize_t size)
 		if(m_buffer.size() >= m_reqBodyLen)
 		{
 			m_buffer.setLength(m_reqBodyLen);
-			std::cout << "Got entire request \"" << m_buffer.c_str() << "\" of " << m_buffer.size() << std::endl;
-			//uv_read_stop((uv_stream_t*) m_client);
+			uv_read_stop((uv_stream_t*) m_client);
 			JSON_t* _req;
 			try {
 				_req = JSON::parse(m_buffer.c_str());
