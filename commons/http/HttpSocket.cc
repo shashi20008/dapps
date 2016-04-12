@@ -154,7 +154,7 @@ void dapps::HttpSocket::feed(const char* buffer, ssize_t nread)
 	
 	if(m_parseComplete)
 	{
-		m_client->process(m_context, this);
+		m_client->process(m_context);
 	}
 }
 

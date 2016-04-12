@@ -5,6 +5,7 @@
 
 dapps::HttpResponse::HttpResponse()
 {
+	std::cout << "creating headers" << std::endl;
 	m_headers = new HttpHeadersMap();
 	m_status = 0;
 }
@@ -89,12 +90,22 @@ dapps::Buffer dapps::HttpResponse::getTCPPayload()
 // Statics
 dapps::HttpResponse* dapps::HttpResponse::createSuccessResponse(std::string _body, dapps::HttpHeadersMap* _additionalHeaders)
 {
+	std::cout << "in createSuccessResponse" << std::endl;
 	HttpResponse* _response = new HttpResponse();
+
+	std::cout << "add status" << std::endl;
 	_response->m_status = HttpConstants::HTTP_STATUS_CODE_OK;
+
+	std::cout << "added status" << std::endl;
+
 	_response->m_body.append(_body);
+
+	std::cout << "added body" << std::endl;
 	std::size_t _bodyLen = _response->m_body.size();
 	_response->m_headers->insert(HttpHeader(HttpConstants::HTTP_HEADER_CONTENT_LENGTH, StringUtils::toString(_bodyLen)));
 	_response->m_headers->insert(HttpHeader(HttpConstants::HTTP_HEADER_CONTENT_TYPE, "application/json"));
+
+
 	if(_additionalHeaders != NULL)
 	{
 		_response->m_headers->insert(_additionalHeaders->begin(), _additionalHeaders->end());

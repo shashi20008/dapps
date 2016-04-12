@@ -21,10 +21,27 @@ dapps::RegistryRequestProcessor* dapps::RegistryRequestProcessor::get()
 	}
 	return m_self;
 }
+void dapps::RegistryRequestProcessor::finishRequest(DappsContext* _context, Buffer response) 
+{
+	std::cout << "going to send request to browser" << std::endl;
+	HttpResponse* res = new HttpResponse();
 
-void dapps::RegistryRequestProcessor::process(dapps::DappsContext* _context, dapps::HttpSocket* socket)
+	std::cout << "created response" << std::endl;
+	HttpSocket* socket = (HttpSocket*)_context->get("httpSocket");
+
+	HttpResponse* httpResponse = HttpResponse::createSuccessResponse(response.str());
+	std::cout << "created response" << std::endl;
+
+	socket->write(httpResponse);
+
+	std::cout << "sent response" << std::endl;
+}
+void dapps::RegistryRequestProcessor::process(dapps::DappsContext* _context)
 {
 	std::cout << "got to RegistryRequestProcessor::process" << std::endl;
+
+	HttpSocket* socket = (HttpSocket*)_context->get("httpSocket");
+
 	std::vector<std::string> urlParts = StringUtils::split(socket->getRequestPath(), '/', 3, true);
 	std::size_t urlPartsLen = urlParts.size();
 	if(urlPartsLen < 2)
@@ -52,5 +69,5 @@ void dapps::RegistryRequestProcessor::process(dapps::DappsContext* _context, dap
 	Buffer buffer;
 	std::size_t bodyLen = json.length();
 	buffer.append(StringUtils::toString(bodyLen) + "\r\n" + json );
-	TcpClient* tcpCliet = new TcpClient("127.0.0.1",8081,buffer);
+	TcpClient* tcpCliet = new TcpClient(_context,"127.0.0.1", 8081, buffer);
 }

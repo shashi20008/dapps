@@ -1,5 +1,6 @@
 #include "TcpClient.h"
 #include "AbstractClientSocket.h"
+#include "../../registry/RegistryRequestProcessor.h"
 #include <iostream>
 #include <cstdlib>
 
@@ -8,11 +9,12 @@ dapps::TcpClient::~TcpClient()
 
 }
 
-dapps::TcpClient::TcpClient(std::string ip,int port,Buffer buffer)
+dapps::TcpClient::TcpClient(DappsContext* context, std::string ip, int port, Buffer buffer)
 {
 	m_ip = ip;
 	m_port = port;
 	m_buffer = buffer;
+	m_context = context;
 	
 	uv_loop_t* loop = uv_default_loop();
 	uv_tcp_t* client = (uv_tcp_t*) malloc(sizeof(uv_tcp_t));
@@ -62,18 +64,19 @@ void dapps::TcpClient::on_write_end(uv_write_t *req, int status) {
 }
 
 void dapps::TcpClient::on_read(uv_stream_t *server, ssize_t nread, const uv_buf_t* buf) {
+	TcpClient* _this = (TcpClient*) server->data;
 	if(nread == UV_EOF) {
-		return; //TODO : pass it to browser
+		std::cout<<"result: " << _this->m_rcvBuffer.c_str() << std::endl;
+		RegistryRequestProcessor* _processor = RegistryRequestProcessor::get();
+		_processor->finishRequest(_this->m_context, _this->m_rcvBuffer);
+
+		return;
 	}
 	if (nread < 0) {
 		std::cout<<"Error:: " << uv_strerror(nread) << std::endl;
 		return;
 	}
-	TcpClient* _this = (TcpClient*) server->data;
-	_this->m_rcvBuffer.append(buf->base,buf->len);
-	
-	std::cout<<"result: " << _this->m_rcvBuffer.c_str() << std::endl;
-	
+	_this->m_rcvBuffer.append(buf->base,buf->len);	
 	
 }
 

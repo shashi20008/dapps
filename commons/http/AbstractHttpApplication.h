@@ -4,13 +4,15 @@
 #include "../dapps-commons.h"
 #include "HttpSocket.h"
 #include "../containers/DappsContext.h"
+#include "../containers/Buffer.h"
 
 namespace dapps
 {
 	class AbstractHttpApplication
 	{
 		public:
-			virtual void process(DappsContext*, HttpSocket*) = 0;
+			virtual void process(DappsContext*) = 0;
+			virtual void finishRequest(DappsContext*, Buffer) = 0;
 	};
 }
 

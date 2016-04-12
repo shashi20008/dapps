@@ -4,6 +4,7 @@
 #include "../commons/containers/DappsContext.h"
 #include "../commons/http/HttpSocket.h"
 #include "../commons/http/AbstractHttpApplication.h"
+#include "../commons/containers/Buffer.h"
 
 namespace dapps
 {
@@ -15,8 +16,8 @@ namespace dapps
 			
 		public:
 			static RegistryRequestProcessor* get();
-			void process(DappsContext*, HttpSocket*);
-			
+			void process(DappsContext*);
+			void finishRequest(DappsContext*, Buffer);
 	};
 }
 

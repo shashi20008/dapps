@@ -7,6 +7,7 @@ dapps::ClientSocket::ClientSocket(dapps::RegistryServer* _registryServer)
 {
 	m_context = new DappsContext(this);
 	m_httpSocket =  new HttpSocket(m_context, this , RegistryRequestProcessor::get());
+	m_context->put("httpSocket", m_httpSocket);
 	
 	m_registryServer = _registryServer;
 	m_logger = m_registryServer->m_logger;
