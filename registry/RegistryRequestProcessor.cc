@@ -1,7 +1,10 @@
 #include "RegistryRequestProcessor.h"
+#include "../commons/sockets/TcpClient.h"
+#include "../commons/containers/Buffer.h"
 #include "../commons/utilities/DappsErrors.h"
 #include "../commons/mongodb/MongoClient.h"
 #include "../commons/http/HttpResponse.h"
+#include "../commons/utilities/StringUtils.h"
 #include <iostream>
 
 dapps::RegistryRequestProcessor* dapps::RegistryRequestProcessor::m_self =  NULL;
@@ -40,7 +43,14 @@ void dapps::RegistryRequestProcessor::process(dapps::DappsContext* _context, dap
 	std::string& appURLParam = urlPartsLen > 2 ? urlParts[2] : _empty;
 	
 	MongoClient* mongoClient = new MongoClient();
-	std::string appId = mongoClient->getApplicationIdByURI(appURI.c_str());
-	std::cout << "AppId: '" << appId << "' got '" << socket->getRequestBody().str() << "' request" << std::endl;
+	//std::string appId = mongoClient->getApplicationIdByURI(appURI.c_str());
+	std::string appName = mongoClient->getApplicationName(appURI.c_str());
+	std::cout << "AppId: '" << appName << "' got '" << socket->getRequestBody().str() << "' request" << std::endl;
 	delete mongoClient;
+	
+	std::string json = "{\"AppName\":\"" + appName + "\"}";
+	Buffer buffer;
+	std::size_t bodyLen = json.length();
+	buffer.append(StringUtils::toString(bodyLen) + "\r\n" + json );
+	TcpClient* tcpCliet = new TcpClient("127.0.0.1",8081,buffer);
 }

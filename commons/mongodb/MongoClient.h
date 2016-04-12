@@ -21,6 +21,7 @@ namespace dapps
 			MongoClient();
 			bson_t* getApplicationByURI(const char*);
 			std::string getApplicationIdByURI (const char*);
+			std::string getApplicationName(const char*);
 			std::string getServer ( std::string);
 			
 			static const char* DAPPS_DB_NAME;

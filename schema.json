@@ -6,7 +6,7 @@ Applications Schema
 	"appName": {
 		"type": "String"
 	},
-	"uriPattern": {
+	"mountPoint": {
 		"type": "String"
 	},
 	"activeRequests": {
