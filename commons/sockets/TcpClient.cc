@@ -22,13 +22,12 @@ dapps::TcpClient::TcpClient(DappsContext* context, std::string ip, int port, Buf
 	
 	uv_tcp_init(loop, client);
 	
-	sockaddr_in req_addr;
-	uv_ip4_addr(m_ip.c_str(), m_port, &req_addr);
+	sockaddr_in* req_addr = (sockaddr_in*) malloc(sizeof(sockaddr_in));
+	uv_ip4_addr(m_ip.c_str(), m_port, req_addr);
 	
 	uv_connect_t* connect_req = (uv_connect_t*) malloc(sizeof(uv_connect_t));
 	connect_req->data = (void*) this;
-	uv_tcp_connect(connect_req, client, (const sockaddr*) &req_addr, on_connect);
-	
+	uv_tcp_connect(connect_req, client, (const sockaddr*) req_addr, on_connect);
 }
 
 void dapps::TcpClient::on_connect(uv_connect_t *req, int status) {
@@ -39,18 +38,18 @@ void dapps::TcpClient::on_connect(uv_connect_t *req, int status) {
 	TcpClient* _this = (TcpClient*)req->data;
 	std::size_t len = _this->m_buffer.size();
 
-	//uv_buf_t* buff = (uv_buf_t*) malloc(sizeof(uv_buf_t));
-    uv_buf_t buff = uv_buf_init(_this->m_buffer.c_str(), sizeof(m_buffer.c_str()));
+	uv_buf_t* buff = (uv_buf_t*) malloc(sizeof(uv_buf_t));
+    //uv_buf_t buff = uv_buf_init(_this->m_buffer.c_str(), sizeof(m_buffer.c_str()));
 
-	buff.len = len;
-    buff.base = _this->m_buffer.c_str();
+	buff->len = len;
+    buff->base = _this->m_buffer.c_str();
 
 	uv_stream_t* tcp = req->handle;
 
 	uv_write_t* write_req = (uv_write_t*) malloc(sizeof(uv_write_t));;
 	int buff_count = 1;
 
-	uv_write(write_req, tcp, &buff, buff_count, on_write_end);
+	uv_write(write_req, tcp, buff, buff_count, on_write_end);
 }
 
 
@@ -76,7 +75,7 @@ void dapps::TcpClient::on_read(uv_stream_t *server, ssize_t nread, const uv_buf_
 		std::cout<<"Error:: " << uv_strerror(nread) << std::endl;
 		return;
 	}
-	_this->m_rcvBuffer.append(buf->base,buf->len);	
-	
+	_this->m_rcvBuffer.append(buf->base, nread);	
+	free(buf->base);
 }
 
