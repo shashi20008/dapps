@@ -17,6 +17,7 @@ namespace dapps
 			~DappsSocket();
 			void write(char*, std::size_t);
 			void feed(const char*, ssize_t);
+			void cleanup();
 			void parseLength(const char*, ssize_t);
 	};
 }

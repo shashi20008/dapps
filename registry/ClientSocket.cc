@@ -44,3 +44,8 @@ void dapps::ClientSocket::feed(const char* buf, ssize_t size)
 {
 	this->m_httpSocket->feed(buf, size);
 }
+
+void dapps::ClientSocket::cleanup()
+{
+	
+}

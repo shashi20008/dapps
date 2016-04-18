@@ -47,10 +47,13 @@ void dapps::AbstractClientSocket::onWriteComplete(uv_write_t* writeReq, int stat
 		fprintf(stderr, "error on_client_write");
 		// @TODO: if the connection is not stale yet, retry write once more.
 	}
+	free(writeReq);
 	uv_close((uv_handle_t*) _this->m_client, onSocketClose);
 }
 
 void dapps::AbstractClientSocket::onSocketClose(uv_handle_t* _handle)
 {
 	// @TODO: connection closed. Cleanup.
+	free(_handle);
+	//cleanup();
 }

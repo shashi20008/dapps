@@ -99,3 +99,8 @@ void dapps::DappsSocket::feed(const char* buf, ssize_t size)
 		}
 	}
 }
+
+void dapps::DappsSocket::cleanup()
+{
+	//nothign to do
+}

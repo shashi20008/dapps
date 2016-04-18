@@ -28,6 +28,7 @@ namespace dapps
 			~ClientSocket();
 			void write(char*, std::size_t);
 			void feed(const char*, ssize_t);
+			void cleanup();
 	};
 }
 #endif //__ClientSocket__

@@ -17,6 +17,7 @@ namespace dapps
 			~AbstractClientSocket();
 			virtual void write(char*, std::size_t) = 0;
 			virtual void feed(const char*, ssize_t) = 0;
+			virtual void cleanup() = 0;
 			static void onClientRead(uv_stream_t*, ssize_t , const uv_buf_t*);
 			static void onWriteComplete(uv_write_t*, int);
 			static void allocBuffer(uv_handle_t*, size_t, uv_buf_t*);
