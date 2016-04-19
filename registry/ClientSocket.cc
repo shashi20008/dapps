@@ -24,6 +24,9 @@ dapps::ClientSocket::ClientSocket(dapps::RegistryServer* _registryServer)
 
 dapps::ClientSocket::~ClientSocket() {
 	std::cout << "ClientSocket destructor executed" << std::endl;
+	free(m_client);
+	delete m_httpSocket;
+	delete m_context;
 }
 
 void dapps::ClientSocket::write(char* buffer, std::size_t length)
@@ -33,7 +36,7 @@ void dapps::ClientSocket::write(char* buffer, std::size_t length)
 	writeReq = (uv_write_t*) malloc(sizeof(uv_write_t));
 	uvBuffer = (uv_buf_t*) malloc(sizeof(uv_buf_t));
 	
-	writeReq->data = m_context;
+	writeReq->data = this;
 	
 	uvBuffer->base = buffer;
 	uvBuffer->len = length;
@@ -47,5 +50,6 @@ void dapps::ClientSocket::feed(const char* buf, ssize_t size)
 
 void dapps::ClientSocket::cleanup()
 {
-	
+	std::cout << "came to cleanup" << std::endl;
+	delete this;
 }

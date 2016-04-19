@@ -11,10 +11,10 @@ namespace dapps
 	class AbstractClientSocket
 	{
 		protected:
-			DappsContext* m_context;
+			DappsContext* m_context; 
 			uv_tcp_t* m_client;
 		public:
-			~AbstractClientSocket();
+			virtual ~AbstractClientSocket();
 			virtual void write(char*, std::size_t) = 0;
 			virtual void feed(const char*, ssize_t) = 0;
 			virtual void cleanup() = 0;

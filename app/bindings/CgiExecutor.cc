@@ -94,6 +94,7 @@ void dapps::CgiExecutor::onExit(uv_process_t* processReq, int64_t exitStatus, in
 	uv_read_stop((uv_stream_t*)_this->m_outputPipe);
 	
 	_this->m_socket->write(_this->m_output.c_str(), _this->m_output.size());
+	uv_close((uv_handle_t*) _this->m_outputPipe, cleanup);
 	uv_close((uv_handle_t*) processReq, cleanup);
 }
 

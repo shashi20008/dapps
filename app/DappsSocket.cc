@@ -22,7 +22,9 @@ dapps::DappsSocket::DappsSocket(DappsServer* _dappsServer)
 
 dapps::DappsSocket::~DappsSocket()
 {
-	//@TODO: clean everything up
+	std::cout << "destructing DappsSocket" << std::endl;
+	free(m_client);
+	delete m_context;
 }
 
 void dapps::DappsSocket::write(char* buffer, std::size_t length)
@@ -32,7 +34,7 @@ void dapps::DappsSocket::write(char* buffer, std::size_t length)
 	writeReq = (uv_write_t*) malloc(sizeof(uv_write_t));
 	uvBuffer = (uv_buf_t*) malloc(sizeof(uv_buf_t));
 	
-	writeReq->data = m_context;
+	writeReq->data = this;
 	
 	uvBuffer->base = buffer;
 	uvBuffer->len = length;
@@ -102,5 +104,6 @@ void dapps::DappsSocket::feed(const char* buf, ssize_t size)
 
 void dapps::DappsSocket::cleanup()
 {
-	//nothign to do
+	std::cout << "came to cleanup" <<std::endl;
+	delete this;
 }

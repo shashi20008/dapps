@@ -42,7 +42,7 @@ void dapps::AbstractClientSocket::allocBuffer(uv_handle_t* handle,size_t suggest
 }
 
 void dapps::AbstractClientSocket::onWriteComplete(uv_write_t* writeReq, int status) {
-	AbstractClientSocket* _this = (AbstractClientSocket*)((DappsContext*) writeReq->data)->getThis();
+	AbstractClientSocket* _this = (AbstractClientSocket*) writeReq->data;
 	if (status < 0) {
 		fprintf(stderr, "error on_client_write");
 		// @TODO: if the connection is not stale yet, retry write once more.
@@ -53,7 +53,7 @@ void dapps::AbstractClientSocket::onWriteComplete(uv_write_t* writeReq, int stat
 
 void dapps::AbstractClientSocket::onSocketClose(uv_handle_t* _handle)
 {
-	// @TODO: connection closed. Cleanup.
-	free(_handle);
-	//cleanup();
+	AbstractClientSocket* _this = (AbstractClientSocket*) ((DappsContext*)_handle->data)->getThis();
+	std::cout << "gonna call cleanup" <<std::endl;
+	_this->cleanup();
 }
