@@ -15,6 +15,11 @@ dapps::HttpSocket::HttpSocket(dapps::DappsContext* _context, AbstractClientSocke
 	m_client = _client;
 }
 
+dapps::HttpSocket::~HttpSocket()
+{
+	delete m_requestHeaders;
+}
+
 std::string dapps::HttpSocket::getRequestMethod()
 {
 	return m_requestMethod;
@@ -163,4 +168,8 @@ void dapps::HttpSocket::write(HttpResponse* _httpResponse)
 	_httpResponse->setHttpVersion(m_httpVersion);
 	Buffer payload = _httpResponse->getTCPPayload();
 	m_socket->write(payload.c_str(), payload.size());
+	
+	// Currently there's no need to keep the response object anymore. 
+	// Remove if some internal is (mis)used somewhere else.
+	delete _httpResponse;
 }

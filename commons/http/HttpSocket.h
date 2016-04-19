@@ -39,6 +39,7 @@ namespace dapps
 		
 		public:
 			HttpSocket(DappsContext*, AbstractClientSocket*, AbstractHttpApplication*);
+			~HttpSocket();
 			std::string getRequestMethod();
 			std::string getRequestPath();
 			std::string getHttpVersion();
