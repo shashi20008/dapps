@@ -18,6 +18,7 @@ namespace dapps
 		
 		public:
 			HttpResponse();
+			~HttpResponse();
 			HttpResponse* setResponseHeaders(HttpHeadersMap*);
 			HttpResponse* setResponseHeader(std::string, std::string);
 			HttpResponse* setResponseBody(Buffer);

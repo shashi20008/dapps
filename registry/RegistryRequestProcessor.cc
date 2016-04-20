@@ -23,18 +23,13 @@ dapps::RegistryRequestProcessor* dapps::RegistryRequestProcessor::get()
 }
 void dapps::RegistryRequestProcessor::finishRequest(DappsContext* _context, Buffer response) 
 {
-	std::cout << "going to send request to browser" << std::endl;
-	HttpResponse* res = new HttpResponse();
-
-	std::cout << "created response" << std::endl;
 	HttpSocket* socket = (HttpSocket*)_context->get("httpSocket");
 
 	HttpResponse* httpResponse = HttpResponse::createSuccessResponse(response.str());
-	std::cout << "created response" << std::endl;
-
 	socket->write(httpResponse);
-
-	std::cout << "sent response" << std::endl;
+	
+	TcpClient* _tcpClient = (TcpClient*) _context->get("tcpSocket");
+	delete _tcpClient;
 }
 void dapps::RegistryRequestProcessor::process(dapps::DappsContext* _context)
 {
@@ -55,9 +50,9 @@ void dapps::RegistryRequestProcessor::process(dapps::DappsContext* _context)
 	
 	// @TODO: move _empty to a static constants file.
 	std::string _empty = "";
-	std::string& dappsVersion =  urlParts[0];
+	// std::string& dappsVersion =  urlParts[0]; // ?? Is there any use for this
 	std::string& appURI = urlParts[1];
-	std::string& appURLParam = urlPartsLen > 2 ? urlParts[2] : _empty;
+	// std::string& appURLParam = urlPartsLen > 2 ? urlParts[2] : _empty; // We should pass this to app server.
 	
 	MongoClient* mongoClient = new MongoClient();
 	//std::string appId = mongoClient->getApplicationIdByURI(appURI.c_str());
@@ -69,5 +64,6 @@ void dapps::RegistryRequestProcessor::process(dapps::DappsContext* _context)
 	Buffer buffer;
 	std::size_t bodyLen = json.length();
 	buffer.append(StringUtils::toString(bodyLen) + "\r\n" + json );
-	TcpClient* tcpCliet = new TcpClient(_context,"127.0.0.1", 8081, buffer);
+	TcpClient* _tcpClient = new TcpClient(_context,"127.0.0.1", 8081, buffer);
+	_context->put("tcpClient", _tcpClient);
 }

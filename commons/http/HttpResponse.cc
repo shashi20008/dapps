@@ -10,6 +10,11 @@ dapps::HttpResponse::HttpResponse()
 	m_status = 0;
 }
 
+dapps::HttpResponse::~HttpResponse()
+{
+	delete m_headers;
+}
+
 dapps::HttpResponse* dapps::HttpResponse::setResponseHeaders(dapps::HttpHeadersMap* headers)
 {
 	if(m_headers != NULL)
