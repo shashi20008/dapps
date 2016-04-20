@@ -1,7 +1,13 @@
 #include "DappsApplication.h"
 #include "../commons/exceptions/DappsException.h"
 #include "../commons/utilities/PathUtils.h"
+#include "../commons/mongodb/MongoClient.h"
 #include <iostream>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include "../commons/containers/JSONTypes.h"
+#include "../dapps.h"
 
 const std::string dapps::DappsApplication::DAPPS_CONFIG_FILENAME = "dapps.json";
 
@@ -34,6 +40,27 @@ void dapps::DappsApplication::loadConfig()
 //@TODO: Add implementation to update this app's details in DB.
 void dapps::DappsApplication::updateDB()
 {
+	struct addrinfo hints, *res;
+
+	char hostname[1024];
+	hostname[1023] = '\0';
+	gethostname(hostname, 1023);
+
+	memset (&hints, 0, sizeof (hints));
+	hints.ai_family = PF_UNSPEC;
+	hints.ai_socktype = SOCK_STREAM;
+	hints.ai_flags |= AI_CANONNAME;
+
+	MongoClient* mongoClient = new MongoClient();
+	getaddrinfo (hostname, NULL, &hints, &res);
+	
+	JSON_t* appConfig = Dapps::get()->config->getConfig();
+	int port = appConfig->get("server")->getInt("port");
+
+	std::cout<<"Host: " <<res->ai_canonname <<" port:" << port<<std::endl;
+	bool insertFlag = mongoClient->updateApplicationDetails(res->ai_canonname, port, m_appName);
+	std::cout<<"AppDetails inserted: " <<insertFlag <<std::endl;
+
 }
 
 std::string dapps::DappsApplication::getAppPath()

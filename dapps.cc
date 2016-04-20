@@ -4,9 +4,23 @@
 
 using namespace dapps;
 
+dapps::Dapps* dapps::Dapps::m_self = NULL;
+dapps::Dapps* dapps::Dapps::get()
+{
+	if(m_self == NULL)
+	{
+		m_self = new Dapps();
+	}
+	return m_self;
+}
+
+dapps::Dapps::Dapps() {
+
+}
+
 int main(int argc, char** argv)
 {
-	Dapps* app = new Dapps();
+	Dapps* app = Dapps::get();
 	app->args = new ArgsProcessor(argc, argv);
 	app->loggingUtil = new LoggingUtil();
 	if(app->args->has("config"))

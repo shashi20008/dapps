@@ -27,7 +27,7 @@ Applications Schema
 		"currentPeriodStart": {
 			"type": "Number"
 		},
-		"currentPeriodRequests: {
+		"currentPeriodRequests": {
 			"type": "Number"
 		}
 	}
@@ -35,8 +35,8 @@ Applications Schema
 
 Servers Schema
 {
-	"appId": {
-		"type": "Number",
+	"appName": {
+		"type": "String",
 		"foreignKey": "Applications"
 	},
 	"ip": {

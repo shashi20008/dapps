@@ -10,12 +10,13 @@
 
 namespace dapps
 {
-	// Satisfy compiler
-	class Dapps;
-
 	class Dapps
 	{
+		static Dapps* m_self;
+		Dapps();
+
 		public:
+			static Dapps* get();
 			ArgsProcessor* args;
 			ConfigProcessor* config; 
 			RegistryServer* registry;
