@@ -34,7 +34,7 @@ void dapps::DappsServer::init()
 	
 	if(r)
 	{
-		throw DappsException("Couldn't start Dapps application server.");
+		throw DappsException(std::string("Couldn't start Dapps application server. because: ") + uv_strerror(r));
 	}
 	
 	ArgsValList* appsDir = m_app->args->get("appsDir");

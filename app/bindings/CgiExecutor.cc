@@ -28,7 +28,7 @@ void dapps::CgiExecutor::initializeProcessOptions(uv_process_options_t* options,
 	childStdio[2].data.fd = 2;
 	
 	options->exit_cb = CgiExecutor::onExit;
-    options->file = execFile;
+    options->file = execFile; // @TODO: delete after use
     options->args = 0;
     options->env = 0;
     options->cwd = path;
