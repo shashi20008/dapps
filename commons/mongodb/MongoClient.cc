@@ -18,6 +18,15 @@ dapps::MongoClient::MongoClient()
 	m_serversCollection = mongoc_client_get_collection(m_mongoClient, DAPPS_DB_NAME, SERVERS_COLLECTION_NAME);
 }
 
+dapps::MongoClient::~MongoClient()
+{
+	std::cout << "destroying mongo client." << std::endl;
+	mongoc_collection_destroy(m_appsCollection);
+	mongoc_collection_destroy(m_serversCollection);
+	mongoc_client_destroy(m_mongoClient);
+	mongoc_cleanup();
+}
+
 bson_t* dapps::MongoClient::getApplicationByURI(const char* uri)
 {
 	bson_t* query;
@@ -27,7 +36,7 @@ bson_t* dapps::MongoClient::getApplicationByURI(const char* uri)
 	query = BCON_NEW("mountPoint", uri);
 	cursor = mongoc_collection_find(m_appsCollection, MONGOC_QUERY_NONE, 0, 0, 0, query, NULL, NULL);
 
-	if(!mongoc_cursor_next(cursor, &resDoc))
+	if(mongoc_cursor_next(cursor, &resDoc))
 	{
 		appDoc = bson_copy(resDoc);
 	}
@@ -44,8 +53,8 @@ std::string dapps::MongoClient::getApplicationIdByURI (const char* uri)
 	if(doc && bson_has_field(doc, "mountPoint") && bson_iter_init(&itr, doc) && bson_iter_find(&itr, "appId"))
 	{
 		appId = bson_iter_utf8(&itr, &length);
+		bson_destroy(doc);
 	}
-	bson_destroy(doc);
 	return appId;
 }
 
@@ -58,9 +67,9 @@ std::string dapps::MongoClient::getApplicationName(const char* uri)
 	if(doc && bson_has_field(doc, "mountPoint") && bson_iter_init(&itr, doc) && bson_iter_find(&itr, "appName"))
 	{
 		appName = bson_iter_utf8(&itr, &length);
+		bson_destroy(doc);
 	}
-	bson_destroy(doc);
-	return "";
+	return appName;
 }
 
 std::string getServer (std::string appIdStr )
