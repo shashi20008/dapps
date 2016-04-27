@@ -22,8 +22,9 @@ dapps::DappsApplication::DappsApplication(std::string path)
 // @TODO: check if its worth making async
 void dapps::DappsApplication::loadConfig()
 {
-	std::string configFilePath = PathUtils::join(m_appPath.c_str(), DappsApplication::DAPPS_CONFIG_FILENAME.c_str());
+	char* configFilePath = PathUtils::join(m_appPath.c_str(), DappsApplication::DAPPS_CONFIG_FILENAME.c_str());
 	m_appConfig = new ConfigProcessor(configFilePath);
+	
 	JSON_t* config =  m_appConfig->getConfig();
 	m_appName = config->getString("AppName");
 	m_appExecutableName = config->getString("main");
@@ -35,6 +36,7 @@ void dapps::DappsApplication::loadConfig()
 	catch(DappsException e)
 	{
 	}
+	delete[] configFilePath;
 }
 
 //@TODO: Add implementation to update this app's details in DB.

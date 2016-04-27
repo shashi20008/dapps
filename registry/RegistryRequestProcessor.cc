@@ -56,7 +56,6 @@ void dapps::RegistryRequestProcessor::process(dapps::DappsContext* _context)
 	// std::string& appURLParam = urlPartsLen > 2 ? urlParts[2] : _empty; // We should pass this to app server.
 	
 	MongoClient* mongoClient = new MongoClient();
-	//std::string appId = mongoClient->getApplicationIdByURI(appURI.c_str());
 	std::string appName = mongoClient->getApplicationName(appURI.c_str());
 	std::cout << "AppId: '" << appName << "' got '" << socket->getRequestBody().str() << "' request" << std::endl;
 	

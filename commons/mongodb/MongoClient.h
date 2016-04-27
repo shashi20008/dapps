@@ -20,6 +20,7 @@ namespace dapps
 			
 		public:
 			MongoClient();
+			~MongoClient();
 			bson_t* getApplicationByURI(const char*);
 			std::string getApplicationIdByURI (const char*);
 			std::string getApplicationName(const char*);

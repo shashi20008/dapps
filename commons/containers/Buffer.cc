@@ -141,7 +141,11 @@ dapps::Buffer& dapps::Buffer::operator=(const Buffer& source)
 	}
 	m_size = source.m_size;
 	m_loc = source.m_loc;
-	// @TODO: delete old one here.
+	
+	if(m_value)
+	{
+		delete[] m_value;
+	}
 	m_value = new char[m_size];
 	for(std::size_t i = 0; i <= m_loc; i++)
 	{
@@ -154,7 +158,6 @@ char& dapps::Buffer::operator[](std::size_t index)
 {
 	if(index >= m_loc)
 	{
-		//@TODO: Throw instead. This is gonna cry in assignment.
 		throw OutOfBoundsException("Invalid index access in Buffer");
 	}
 	return m_value[index];
@@ -176,7 +179,9 @@ dapps::Buffer* dapps::Buffer::ensureCapacity(std::size_t capacity)
 dapps::Buffer* dapps::Buffer::resize(std::size_t newSize)
 {
 	char* newVal = new char[newSize];
-	m_value = copyTo(newVal);
+	copyTo(newVal);
+	delete m_value;
+	m_value = newVal;
 	return this;
 }
 
