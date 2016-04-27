@@ -7,6 +7,7 @@
 #include <map>
 #include "../utilities/StringUtils.h"
 #include "../containers/JSONTypes.h"
+#include "../containers/ServerSchema.h"
 #include "../../dapps.h"
 
 const char* dapps::MongoClient::DAPPS_DB_NAME = "dapps";
@@ -65,6 +66,24 @@ bson_t* dapps::MongoClient::getApplicationByURI(const char* uri)
 	if(mongoc_cursor_next(cursor, &resDoc))
 	{
 		return bson_copy(resDoc);
+	}
+	return NULL;
+}
+
+dapps::ServerSchema* dapps::MongoClient::readApplicationDetails(std::string appName)
+{
+	bson_t* query;
+	bson_iter_t itr;
+	uint32_t length;
+	const bson_t* resDoc;
+	mongoc_cursor_t* cursor;
+	query = BCON_NEW("appname", appName.c_str());
+	cursor = mongoc_collection_find(m_serversCollection, MONGOC_QUERY_NONE, 0, 0, 0, query, NULL, NULL);
+	if(mongoc_cursor_next(cursor, &resDoc))
+	{
+		ServerSchema* serverSchema = ServerSchema::getDocument(resDoc);
+		return serverSchema;
+		
 	}
 	return NULL;
 }

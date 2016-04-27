@@ -26,6 +26,7 @@ namespace dapps
 			std::string getServer ( std::string);
 			std::string getConnectionString(JSON_t*);
 			bool updateApplicationDetails(std::string , int , std::string );
+			ServerSchema* readApplicationDetails(std::string appName);
 			
 			static const char* DAPPS_DB_NAME;
 			static const char* APPS_COLLECTION_NAME;

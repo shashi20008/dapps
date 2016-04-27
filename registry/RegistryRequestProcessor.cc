@@ -1,6 +1,7 @@
 #include "RegistryRequestProcessor.h"
 #include "../commons/sockets/TcpClient.h"
 #include "../commons/containers/Buffer.h"
+#include "../commons/containers/ServerSchema.h"
 #include "../commons/utilities/DappsErrors.h"
 #include "../commons/mongodb/MongoClient.h"
 #include "../commons/http/HttpResponse.h"
@@ -58,12 +59,19 @@ void dapps::RegistryRequestProcessor::process(dapps::DappsContext* _context)
 	//std::string appId = mongoClient->getApplicationIdByURI(appURI.c_str());
 	std::string appName = mongoClient->getApplicationName(appURI.c_str());
 	std::cout << "AppId: '" << appName << "' got '" << socket->getRequestBody().str() << "' request" << std::endl;
-	delete mongoClient;
+	
 	
 	std::string json = "{\"AppName\":\"" + appName + "\"}";
 	Buffer buffer;
 	std::size_t bodyLen = json.length();
 	buffer.append(StringUtils::toString(bodyLen) + "\r\n" + json );
-	TcpClient* _tcpClient = new TcpClient(_context,"127.0.0.1", 8081, buffer);
+
+	ServerSchema* serverSchema = mongoClient->readApplicationDetails(appName);
+	// std::string host = "127.0.0.1";
+	// int port = 8081;
+	delete mongoClient;
+	std::cout<<"**ip: "<<serverSchema->getIp()<< "  port:"<<serverSchema->getPort()<<std::endl;
+	TcpClient* _tcpClient = new TcpClient(_context, serverSchema->getIp(), serverSchema->getPort(), buffer);
+
 	_context->put("tcpClient", _tcpClient);
 }
