@@ -42,13 +42,14 @@ void dapps::AbstractClientSocket::allocBuffer(uv_handle_t* handle,size_t suggest
 }
 
 void dapps::AbstractClientSocket::onWriteComplete(uv_write_t* writeReq, int status) {
-	AbstractClientSocket* _this = (AbstractClientSocket*) writeReq->data;
 	if (status < 0) {
 		fprintf(stderr, "error on_client_write");
 		// @TODO: if the connection is not stale yet, retry write once more.
 	}
+
+	delete[] ((char*)writeReq->data);
 	free(writeReq);
-	uv_close((uv_handle_t*) _this->m_client, onSocketClose);
+	uv_close((uv_handle_t*) writeReq->handle, onSocketClose);
 }
 
 void dapps::AbstractClientSocket::onSocketClose(uv_handle_t* _handle)

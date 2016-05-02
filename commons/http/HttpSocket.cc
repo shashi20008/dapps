@@ -167,7 +167,7 @@ void dapps::HttpSocket::write(HttpResponse* _httpResponse)
 {
 	_httpResponse->setHttpVersion(m_httpVersion);
 	Buffer payload = _httpResponse->getTCPPayload();
-	m_socket->write(payload.c_str(), payload.size());
+	m_socket->write(payload.c_strCopy(), payload.size());
 	
 	// Currently there's no need to keep the response object anymore. 
 	// Remove if some internal is (mis)used somewhere else.

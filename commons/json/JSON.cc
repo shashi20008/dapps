@@ -125,7 +125,7 @@ dapps::JSON_t* dapps::JSON::parseString(std::string& input, uint64_t& counter)
 	std::strcpy(retStr, str.c_str());
 	
 	//Cleanup
-	delete strBuffer;
+	delete[] strBuffer;
 	
 	JSON_t* _container = new JSON_t();
 	_container->m_type = JSON_t::VALUE_TYPE_STRING;
@@ -178,7 +178,7 @@ dapps::JSON_t* dapps::JSON::parseNumber(std::string& input, uint64_t& counter)
 		_val->m_val.m_intVal = JSON::strtoll(numStr.c_str());
 	}
 	//cleanup
-	delete numBuffer;
+	delete[] numBuffer;
 	
 	return _val;
 }
@@ -243,7 +243,7 @@ std::string dapps::JSON::parseKey(std::string& input, uint64_t& counter)
 	skipWhiteSpace(input, counter);
 	
 	// Cleanup
-	delete keyBuffer;
+	delete[] keyBuffer;
 	
 	return key;
 }

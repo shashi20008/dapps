@@ -72,5 +72,6 @@ void dapps::RegistryRequestProcessor::process(dapps::DappsContext* _context)
 	std::cout<<"**ip: "<<serverSchema->getIp()<< "  port:"<<serverSchema->getPort()<<std::endl;
 	TcpClient* _tcpClient = new TcpClient(_context, serverSchema->getIp(), serverSchema->getPort(), buffer);
 
+	delete serverSchema;
 	_context->put("tcpClient", _tcpClient);
 }
