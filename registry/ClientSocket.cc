@@ -52,5 +52,5 @@ void dapps::ClientSocket::feed(const char* buf, ssize_t size)
 void dapps::ClientSocket::cleanup()
 {
 	std::cout << "came to cleanup" << std::endl;
-	delete this;
+	m_registryServer->cleanupConn(this);
 }

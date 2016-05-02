@@ -1,5 +1,4 @@
 #include "RegistryServer.h"
-#include "ClientSocket.h"
 
 dapps::RegistryServer::RegistryServer(dapps::Dapps* _app) 
 {
@@ -76,6 +75,22 @@ void dapps::RegistryServer::onNewConnection(uv_stream_t* server, int status)
 
 	// @TODO: make timeout value configurable.
 	_this->m_clients->insert(ClientInfoPair(clientObject, new ClientInfo(clientObject, 5)));
+}
+
+void dapps::RegistryServer::cleanupConn(ClientSocket* _clientSocket)
+{
+	if(_clientSocket == NULL)
+	{
+		return;
+	}
+	ClientInfoMap::iterator itr = m_clients->find(_clientSocket);
+	if(itr != m_clients->end())
+	{
+		ClientInfo* _clientInfo = itr->second;
+		m_clients->erase(itr);
+		delete _clientInfo;
+	}
+	delete _clientSocket;
 }
 
 dapps::Dapps* dapps::RegistryServer::getApp() 

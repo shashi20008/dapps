@@ -1,5 +1,4 @@
 #include "DappsServer.h"
-#include "DappsSocket.h"
 #include "DappsApplicationFactory.h"
 #include <cstdlib>
 #include <iostream>
@@ -88,6 +87,22 @@ void dapps::DappsServer::onRejectConnection(uv_handle_t* _handle)
 {
 	std::cout << "Rejecting connection" <<std::endl;
 	free(_handle);
+}
+
+void dapps::DappsServer::cleanupConn(DappsSocket* _dappsSocket)
+{
+	if(_dappsSocket == NULL)
+	{
+		return;
+	}
+	ClientInfoMap::iterator itr = m_clients->find(_dappsSocket);
+	if(itr != m_clients->end())
+	{
+		ClientInfo* _clientInfo = itr->second;
+		m_clients->erase(itr);
+		delete _clientInfo;
+	}
+	delete _dappsSocket;
 }
 
 dapps::Dapps* dapps::DappsServer::getApp() 

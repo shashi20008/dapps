@@ -2,6 +2,7 @@
 #define __dapps_DAPPS_SERVER__
 
 #include "../dapps.h"
+#include "DappsSocket.h"
 #include "../commons/containers/ClientInfo.h"
 #include "uv.h"
 
@@ -23,6 +24,7 @@ namespace dapps
 			static void onNewConnection(uv_stream_t*, int);
 			static void rejectIncomingConnection(uv_stream_t* server);
 			static void onRejectConnection(uv_handle_t*);
+			void cleanupConn(DappsSocket*);
 			Dapps* getApp();
 			uv_loop_t* getLoop();
 			uv_tcp_t* getServer();
