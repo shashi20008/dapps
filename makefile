@@ -20,6 +20,7 @@ SRCS=dapps.cc \
 	utilities/ConfigProcessor.cc \
 	commons/json/JSON.cc \
 	commons/containers/JSONTypes.cc \
+	commons/containers/ClientInfo.cc \
 	commons/utilities/StringUtils.cc \
 	commons/utilities/LoggingUtil.cc \
 	commons/utilities/PathUtils.cc \

@@ -8,6 +8,7 @@
 #include <uv.h>
 #include <fstream>
 #include "../dapps.h"
+#include "../commons/containers/ClientInfo.h"
 #include "../commons/utilities/LoggingUtil.h"
 
 namespace dapps
@@ -19,6 +20,7 @@ namespace dapps
 			
 		private:
 			Dapps* m_app;
+			ClientInfoMap* m_clients;
 			uv_loop_t* m_loop;
 			uv_tcp_t* m_server;
 			struct sockaddr_in m_addr;

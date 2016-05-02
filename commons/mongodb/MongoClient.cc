@@ -86,8 +86,6 @@ bson_t* dapps::MongoClient::getApplicationByURI(const char* uri)
 dapps::ServerSchema* dapps::MongoClient::readApplicationDetails(std::string appName)
 {
 	bson_t* query;
-	bson_iter_t itr;
-	uint32_t length;
 	const bson_t* resDoc;
 	mongoc_cursor_t* cursor;
 	query = BCON_NEW("appname", appName.c_str());
@@ -128,57 +126,3 @@ std::string dapps::MongoClient::getApplicationName(const char* uri)
 	}
 	return appName;
 }
-
-std::string getServer (std::string appIdStr )
-{
-	int appId;
-	dapps::StringUtils::fromString( appIdStr, &appId);
-	mongoc_cursor_t* cursor;
-	bson_t* query = BCON_NEW("pipeline", "[", "{",
-												"$match", "{", 
-													"appId", BCON_INT32(appId), 
-												"}",
-											"}",
-											// "{",
-											// 	"$group", "{", 
-											// 		"_id","$appId",
-											// 		"port","$port",
-											// 		"ip", "$ip",
-											// 		"minload", "{", 
-											// 			"$min","$load",
-											// 		"}",
-											// 	"}",
-											// "}",
-										"]");
-	
-	const bson_t* resDoc;
-	double minValue = 2;
-	bson_iter_t itr;
- 	std::string key;
- 	double value;
-
-	mongoc_client_t* m_mongoClient = mongoc_client_new("mongodb://127.0.0.1/");
-	mongoc_collection_t* m_serversCollection = mongoc_client_get_collection(m_mongoClient, "dapps", "servers");
-	cursor = mongoc_collection_aggregate(m_serversCollection, MONGOC_QUERY_NONE, query, NULL, NULL);
-	while(mongoc_cursor_next(cursor, &resDoc))
-	{
-		if(resDoc && bson_iter_init(&itr, resDoc))
-		{
-			while(bson_iter_next(&itr))
-			{
-				key = bson_iter_key(&itr);
-				if(key == "load")
-				{
-					value = bson_iter_double (&itr);
-					if(value < minValue){
-						minValue = value;
-						dapps::ServerSchema* schemaObject = dapps::ServerSchema::getDocument(resDoc);
-					}
-				}
-			}
-		}
-		
-	}
-	return "temp";
-}
-

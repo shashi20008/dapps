@@ -5,12 +5,14 @@ dapps::RegistryServer::RegistryServer(dapps::Dapps* _app)
 {
 	this->m_app = _app;
 	this->m_logger = m_app->loggingUtil;
+	this->m_clients = new ClientInfoMap();
 	serverSetup();
 }
 
 dapps::RegistryServer::~RegistryServer() 
 {
 	std::cout << "registryServer destructor executed" << std::endl;
+	delete m_clients;
 }
 
 void dapps::RegistryServer::serverSetup() 
@@ -26,15 +28,14 @@ void dapps::RegistryServer::serverSetup()
 	std::string ipAddress = m_app->config->getConfig()->get("registry")->getString("host");
 	int64_t port = m_app->config->getConfig()->get("registry")->getInt("port");
 	
-	std::cout <<"ip: " << ipAddress << ", port: " << port << std::endl;
-	std::cout <<  JSON::stringify(m_app->config->getConfig()) <<std::endl;
-	
 	uv_ip4_addr(ipAddress.c_str(), port, &m_addr);
 	uv_tcp_bind(m_server, (const struct sockaddr*)&m_addr, 0);
 
 	int r = uv_listen((uv_stream_t*) m_server, 1, this->onNewConnection);
 	if (r) {
-	fprintf(stderr, "Listen error %s\n", uv_strerror(r));
+		std::ostringstream errorStringStream;
+		errorStringStream << "Listen error " << uv_strerror(r) << std::endl;
+		throw DappsException(errorStringStream.str());
 	}
 	m_logger->log("Server listening\r\n");
 }
@@ -72,6 +73,9 @@ void dapps::RegistryServer::onNewConnection(uv_stream_t* server, int status)
 		return;
 	}
 	ClientSocket* clientObject =  new ClientSocket(_this);
+
+	// @TODO: make timeout value configurable.
+	_this->m_clients->insert(ClientInfoPair(clientObject, new ClientInfo(clientObject, 5)));
 }
 
 dapps::Dapps* dapps::RegistryServer::getApp() 
