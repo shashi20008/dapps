@@ -14,6 +14,7 @@ namespace dapps
 		
 		public:
 			DappsContext(void*);
+			~DappsContext();
 			void* getThis(); //Returns logical this pointer.
 			ContextMap* getContextMap();
 			void* get(std::string);

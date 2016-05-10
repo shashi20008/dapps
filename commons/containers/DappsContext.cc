@@ -11,6 +11,11 @@ dapps::DappsContext::DappsContext(void* dappsObject)
 	m_objects = new std::map<std::string, void*>();
 }
 
+dapps::DappsContext::~DappsContext()
+{
+	delete m_objects;
+}
+
 void* dapps::DappsContext::getThis() // Returns logical this pointer.
 {
 	return m_this;

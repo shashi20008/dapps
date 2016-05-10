@@ -36,11 +36,12 @@ void dapps::ClientSocket::write(char* buffer, std::size_t length)
 	writeReq = (uv_write_t*) malloc(sizeof(uv_write_t));
 	uvBuffer = (uv_buf_t*) malloc(sizeof(uv_buf_t));
 	
-	writeReq->data = this;
+	writeReq->data = buffer;
 	
 	uvBuffer->base = buffer;
 	uvBuffer->len = length;
 	uv_write(writeReq, (uv_stream_t*)m_client, uvBuffer, 1, onWriteComplete);
+	free(uvBuffer);
 }
 
 void dapps::ClientSocket::feed(const char* buf, ssize_t size)
@@ -51,5 +52,5 @@ void dapps::ClientSocket::feed(const char* buf, ssize_t size)
 void dapps::ClientSocket::cleanup()
 {
 	std::cout << "came to cleanup" << std::endl;
-	delete this;
+	m_registryServer->cleanupConn(this);
 }

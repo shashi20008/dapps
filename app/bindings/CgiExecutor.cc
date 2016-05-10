@@ -52,11 +52,11 @@ void dapps::CgiExecutor::execute(DappsApplication* app, DappsSocket* socket, JSO
 	uv_process_t* _processReq = (uv_process_t*) malloc(sizeof(uv_process_t));
 	_processReq->data = (void*) this;
 	
-	uv_process_options_t* _options  = (uv_process_options_t*) malloc(sizeof(uv_process_options_t));
-	initializeProcessOptions(_options, app, args);
+	m_process_options = (uv_process_options_t*) malloc(sizeof(uv_process_options_t));
+	initializeProcessOptions(m_process_options, app, args);
 	
 	int r;
-	if((r = uv_spawn(_loop, _processReq, _options)))
+	if((r = uv_spawn(_loop, _processReq, m_process_options)))
 	{
 		std::cout << "Process creation error:: " << uv_strerror(r) << std::endl;
 		return;
@@ -80,6 +80,7 @@ void dapps::CgiExecutor::onRead(uv_stream_t* _pipe, ssize_t nread, const uv_buf_
 	{
 		std::cout << "an error occurred:: " << uv_strerror(nread) <<std::endl;
 	}
+	free(buf->base);
 }
 
 void dapps::CgiExecutor::allocBuffer(uv_handle_t* handle,size_t suggested_size,uv_buf_t* buf) 
@@ -93,7 +94,12 @@ void dapps::CgiExecutor::onExit(uv_process_t* processReq, int64_t exitStatus, in
 	CgiExecutor* _this = (CgiExecutor*) processReq->data;
 	uv_read_stop((uv_stream_t*)_this->m_outputPipe);
 	
-	_this->m_socket->write(_this->m_output.c_str(), _this->m_output.size());
+	_this->m_socket->write(_this->m_output.c_strCopy(), _this->m_output.size());
+
+	//Cleanup
+	free((void*)(_this->m_process_options->file));
+	free(_this->m_process_options->stdio);
+	free(_this->m_process_options);
 	uv_close((uv_handle_t*) _this->m_outputPipe, cleanup);
 	uv_close((uv_handle_t*) processReq, cleanup);
 }

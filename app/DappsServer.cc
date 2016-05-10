@@ -1,5 +1,4 @@
 #include "DappsServer.h"
-#include "DappsSocket.h"
 #include "DappsApplicationFactory.h"
 #include <cstdlib>
 #include <iostream>
@@ -9,8 +8,14 @@ dapps::DappsServer::DappsServer(dapps::Dapps* _app)
 	m_app = _app;
 	m_loop = NULL;
 	m_server = NULL;
+	m_clients = new ClientInfoMap();
 	init();
 	std::cout << "init complete" <<std::endl;
+}
+
+dapps::DappsServer::~DappsServer()
+{
+	delete m_clients;
 }
 
 void dapps::DappsServer::init()
@@ -62,6 +67,10 @@ void dapps::DappsServer::onNewConnection(uv_stream_t* server, int status)
 		return;
 	}
 	DappsSocket* _socket = new DappsSocket(_this);
+
+	// @TODO: make timeout configurable. 
+	// Do we even need to timeout here? Wouldn't Registry timeout take care of it?
+	_this->m_clients->insert(ClientInfoPair(_socket, new ClientInfo(_socket, 5)));
 }
 
 void dapps::DappsServer::rejectIncomingConnection(uv_stream_t* server)
@@ -78,6 +87,22 @@ void dapps::DappsServer::onRejectConnection(uv_handle_t* _handle)
 {
 	std::cout << "Rejecting connection" <<std::endl;
 	free(_handle);
+}
+
+void dapps::DappsServer::cleanupConn(DappsSocket* _dappsSocket)
+{
+	if(_dappsSocket == NULL)
+	{
+		return;
+	}
+	ClientInfoMap::iterator itr = m_clients->find(_dappsSocket);
+	if(itr != m_clients->end())
+	{
+		ClientInfo* _clientInfo = itr->second;
+		m_clients->erase(itr);
+		delete _clientInfo;
+	}
+	delete _dappsSocket;
 }
 
 dapps::Dapps* dapps::DappsServer::getApp() 

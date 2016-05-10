@@ -1,7 +1,7 @@
 CC=gcc
 CXX=g++
 RM=rm -f
-CPPFLAGS=-Wall $(shell pkg-config --cflags libmongoc-1.0)
+CPPFLAGS=-g -Wall $(shell pkg-config --cflags libmongoc-1.0)
 LDFLAGS=
 LDLIBS=-luv $(shell pkg-config --libs libmongoc-1.0)
 
@@ -20,6 +20,7 @@ SRCS=dapps.cc \
 	utilities/ConfigProcessor.cc \
 	commons/json/JSON.cc \
 	commons/containers/JSONTypes.cc \
+	commons/containers/ClientInfo.cc \
 	commons/utilities/StringUtils.cc \
 	commons/utilities/LoggingUtil.cc \
 	commons/utilities/PathUtils.cc \

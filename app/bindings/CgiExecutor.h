@@ -10,6 +10,7 @@ namespace dapps
 	class CgiExecutor : public Executor
 	{
 		uv_pipe_t* m_outputPipe;
+		uv_process_options_t* m_process_options;
 		Buffer m_output;
 		DappsSocket* m_socket;
 		JSON_t* m_request;
