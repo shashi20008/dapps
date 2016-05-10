@@ -18,6 +18,7 @@ namespace dapps
 		
 		static void scanForApplications();
 		static void onScan(uv_fs_t*);
+		static void runCommand(uv_fs_event_t*, const char*, int, int);
 		
 		public:
 			static void initialize(std::string);
