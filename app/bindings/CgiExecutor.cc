@@ -1,6 +1,7 @@
 #include "CgiExecutor.h"
 #include "../../commons/utilities/PathUtils.h"
 #include "../../registry/RegistryRequestProcessor.h" // @FixMe: Undo this somehow
+#include "../../commons/utilities/DappsErrors.h"
 #include <cstdlib>
 #include <iostream>
 
@@ -63,6 +64,8 @@ void dapps::CgiExecutor::execute(DappsApplication* app, DappsContext* _context, 
 	if((r = uv_spawn(_loop, _processReq, m_process_options)))
 	{
 		std::cout << "Process creation error:: " << uv_strerror(r) << std::endl;
+		this->m_output.append(DappsErrors::INVALID_EXECUTABLE_FOR_APP->getJSONString());
+		RegistryRequestProcessor::get()->finishRequest(this->m_context, this->m_output);
 		return;
 	}
 	uv_read_start((uv_stream_t*) m_outputPipe, allocBuffer, onRead);

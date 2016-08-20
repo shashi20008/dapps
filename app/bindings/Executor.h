@@ -11,7 +11,7 @@ namespace dapps
 	class Executor
 	{
 		public:
-			~Executor();
+			virtual ~Executor();
 			virtual void execute(DappsApplication*, DappsContext* _context, JSON_t*, std::string) = 0;
 			static Executor* create(std::string);
 	};

@@ -1,6 +1,7 @@
 #include "ClientSocket.h"
 #include "../commons/utilities/StringUtils.h"
 #include "RegistryRequestProcessor.h"
+#include "../app/bindings/Executor.h"
 #include <map>
 
 dapps::ClientSocket::ClientSocket(dapps::RegistryServer* _registryServer) 
@@ -23,10 +24,12 @@ dapps::ClientSocket::ClientSocket(dapps::RegistryServer* _registryServer)
 }
 
 dapps::ClientSocket::~ClientSocket() {
-	std::cout << "ClientSocket destructor executed" << std::endl;
 	free(m_client);
+	Executor* _executor = (Executor*)m_context->get("executor");
+	delete _executor;
 	delete m_httpSocket;
 	delete m_context;
+	std::cout << "ClientSocket destructor executed" << std::endl;
 }
 
 void dapps::ClientSocket::write(char* buffer, std::size_t length)
@@ -41,6 +44,7 @@ void dapps::ClientSocket::write(char* buffer, std::size_t length)
 	uvBuffer->base = buffer;
 	uvBuffer->len = length;
 	uv_write(writeReq, (uv_stream_t*)m_client, uvBuffer, 1, onWriteComplete);
+	std::cout << "write request put" <<std::endl;
 	free(uvBuffer);
 }
 

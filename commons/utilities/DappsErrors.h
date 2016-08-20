@@ -19,6 +19,7 @@ namespace dapps
 			
 		// The predefined errors.
 		static DappsErrors* INVALID_REQUEST_URI;
+		static DappsErrors* INVALID_EXECUTABLE_FOR_APP;
 	};
 }
 

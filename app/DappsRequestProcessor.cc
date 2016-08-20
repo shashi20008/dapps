@@ -31,5 +31,6 @@ void dapps::DappsRequestProcessor::process(DappsContext* _context, dapps::JSON_t
 		// @TODO: send back error reponse
 		return;
 	}
+	_context->put("executor", executor);
 	executor->execute(app, _context, request, "");
 }

@@ -31,8 +31,8 @@ void dapps::RegistryRequestProcessor::finishRequest(DappsContext* _context, Buff
 	HttpResponse* httpResponse = HttpResponse::createSuccessResponse(response.str());
 	socket->write(httpResponse);
 	
-	TcpClient* _tcpClient = (TcpClient*) _context->get("tcpSocket");
-	delete _tcpClient;
+	JSON_t* _request = (JSON_t*) _context->get("request");
+	delete _request;
 }
 void dapps::RegistryRequestProcessor::process(dapps::DappsContext* _context)
 {
@@ -65,6 +65,8 @@ void dapps::RegistryRequestProcessor::process(dapps::DappsContext* _context)
 	
 	std::string json = "{\"AppName\":\"" + appName + "\"}";
 	JSON_t* _request = JSON::parse(json);
+	_context->put("request", _request);
+
 	DappsRequestProcessor* _processor = DappsRequestProcessor::get();
 	_processor->process(_context, _request);
 }

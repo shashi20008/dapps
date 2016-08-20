@@ -22,7 +22,7 @@ namespace dapps
 		static void cleanup(uv_handle_t*);
 		public:
 			CgiExecutor();
-			~CgiExecutor();
+			virtual ~CgiExecutor();
 			void execute(DappsApplication*, DappsContext* _context, JSON_t*, std::string);
 	};
 }

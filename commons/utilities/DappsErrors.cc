@@ -27,3 +27,4 @@ std::string dapps::DappsErrors::getJSONString()
 }
 
 dapps::DappsErrors* dapps::DappsErrors::INVALID_REQUEST_URI = new DappsErrors(1, "Invalid request URI. No such application was found.");
+dapps::DappsErrors* dapps::DappsErrors::INVALID_EXECUTABLE_FOR_APP = new DappsErrors(2, "Invalid executable. Executable not found or permission denied.");
