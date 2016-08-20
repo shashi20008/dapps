@@ -13,6 +13,7 @@ namespace dapps
 		uv_process_options_t* m_process_options;
 		Buffer m_output;
 		JSON_t* m_request;
+		DappsContext* m_context;
 		
 		void initializeProcessOptions(uv_process_options_t*, dapps::DappsApplication*, std::string);
 		static void allocBuffer(uv_handle_t*,size_t,uv_buf_t*);
@@ -22,7 +23,7 @@ namespace dapps
 		public:
 			CgiExecutor();
 			~CgiExecutor();
-			void execute(DappsApplication*, JSON_t*, std::string);
+			void execute(DappsApplication*, DappsContext* _context, JSON_t*, std::string);
 	};
 }
 

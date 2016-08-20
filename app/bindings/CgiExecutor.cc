@@ -1,5 +1,6 @@
 #include "CgiExecutor.h"
 #include "../../commons/utilities/PathUtils.h"
+#include "../../registry/RegistryRequestProcessor.h" // @FixMe: Undo this somehow
 #include <cstdlib>
 #include <iostream>
 
@@ -37,11 +38,15 @@ void dapps::CgiExecutor::initializeProcessOptions(uv_process_options_t* options,
     options->stdio = childStdio;
     options->uid = 0;
     options->gid = 0;
+
+    std::cout << path << std::endl;
+    std::cout << execFile <<std::endl;
 }
 
-void dapps::CgiExecutor::execute(DappsApplication* app, JSON_t* req, std::string args)
+void dapps::CgiExecutor::execute(DappsApplication* app, DappsContext* _context, JSON_t* req, std::string args)
 {
 	m_request = req;
+	m_context = _context;
 	uv_loop_t* _loop = uv_default_loop();
 	
 	m_outputPipe = (uv_pipe_t*) malloc(sizeof(uv_pipe_t));
@@ -93,6 +98,7 @@ void dapps::CgiExecutor::onExit(uv_process_t* processReq, int64_t exitStatus, in
 	CgiExecutor* _this = (CgiExecutor*) processReq->data;
 	uv_read_stop((uv_stream_t*)_this->m_outputPipe);
 
+	RegistryRequestProcessor::get()->finishRequest(_this->m_context, _this->m_output);
 	//Cleanup
 	free((void*)(_this->m_process_options->file));
 	free(_this->m_process_options->stdio);

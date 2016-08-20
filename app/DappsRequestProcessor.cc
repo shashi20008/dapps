@@ -15,7 +15,7 @@ dapps::DappsRequestProcessor* dapps::DappsRequestProcessor::get()
 	return m_self;
 }
 
-void dapps::DappsRequestProcessor::process(dapps::JSON_t* request)
+void dapps::DappsRequestProcessor::process(DappsContext* _context, dapps::JSON_t* request)
 {
 	std::cout << "came to process.. Got:: " << JSON::stringify(request) << std::endl;
 	std::string appName = request->getString("AppName");
@@ -31,5 +31,5 @@ void dapps::DappsRequestProcessor::process(dapps::JSON_t* request)
 		// @TODO: send back error reponse
 		return;
 	}
-	executor->execute(app, request, "");
+	executor->execute(app, _context, request, "");
 }

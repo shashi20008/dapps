@@ -66,5 +66,5 @@ void dapps::RegistryRequestProcessor::process(dapps::DappsContext* _context)
 	std::string json = "{\"AppName\":\"" + appName + "\"}";
 	JSON_t* _request = JSON::parse(json);
 	DappsRequestProcessor* _processor = DappsRequestProcessor::get();
-	_processor->process(_request);
+	_processor->process(_context, _request);
 }

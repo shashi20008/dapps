@@ -39,14 +39,8 @@ int main(int argc, char** argv)
 		return 0;
 	}
 
-	if(app->args->has("registry")){
-		app->registry = new RegistryServer(app);
-	}
-	
-	if(app->args->has("appServer"))
-	{
-		app->appServer = new DappsServer(app);
-	}
+	app->registry = new RegistryServer(app);
+	app->appServer = new DappsServer(app);
 	
 	if(app->args->has("testJSON"))
 	{

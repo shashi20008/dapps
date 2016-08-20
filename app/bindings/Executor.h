@@ -4,6 +4,7 @@
 #include <string>
 #include "../DappsApplication.h"
 #include "../../commons/containers/JSONTypes.h"
+#include "../../commons/containers/DappsContext.h"
 
 namespace dapps
 {
@@ -11,7 +12,7 @@ namespace dapps
 	{
 		public:
 			~Executor();
-			virtual void execute(DappsApplication*, JSON_t*, std::string) = 0;
+			virtual void execute(DappsApplication*, DappsContext* _context, JSON_t*, std::string) = 0;
 			static Executor* create(std::string);
 	};
 }
