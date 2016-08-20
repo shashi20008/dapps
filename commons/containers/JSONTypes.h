@@ -27,6 +27,8 @@ namespace dapps
 	class JSON_t 
 	{
 		public:
+			~JSON_t();
+			
 			JSONValueType m_type;
 			JSONContainer m_val;
 			

@@ -11,6 +11,29 @@ const dapps::JSONValueType dapps::JSON_t::VALUE_TYPE_INTEGER = 4;
 const dapps::JSONValueType dapps::JSON_t::VALUE_TYPE_BOOLEAN = 5;
 const dapps::JSONValueType dapps::JSON_t::VALUE_TYPE_NULL = 6;
 
+dapps::JSON_t::~JSON_t()
+{
+	if(this->m_type == VALUE_TYPE_STRING) 
+	{
+		delete this->m_val.m_str;
+	} 
+	else if(this->m_type == VALUE_TYPE_ARRAY) 
+	{
+		for(JSONArray::iterator _it = this->m_val.m_array->begin(); _it != this->m_val.m_array->end(); ++_it) 
+		{
+			delete *_it;
+		}
+		delete this->m_val.m_array;
+	} 
+	else if(this->m_type == VALUE_TYPE_OBJECT) 
+	{
+		for(JSONObject::iterator _it = this->m_val.m_object->begin(); _it != this->m_val.m_object->end(); ++_it)
+		{
+			delete _it->second;
+		}
+		delete this->m_val.m_object;
+	}
+}
 
 dapps::JSONObject* dapps::JSON_t::getObject()
 {
