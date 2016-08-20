@@ -10,7 +10,6 @@ SRCS=dapps.cc \
 	registry/ClientSocket.cc \
 	registry/RegistryRequestProcessor.cc \
 	app/DappsServer.cc \
-	app/DappsSocket.cc \
 	app/DappsRequestProcessor.cc \
 	app/DappsApplication.cc \
 	app/DappsApplicationFactory.cc \

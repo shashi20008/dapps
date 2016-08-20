@@ -280,7 +280,7 @@ dapps::JSON_t* dapps::JSON::parseBoolean(std::string& input, uint64_t& counter)
 	skipWhiteSpace(input, counter);
 	
 	//cleanup
-	delete token;
+	delete[] token;
 	return _val;
 }
 

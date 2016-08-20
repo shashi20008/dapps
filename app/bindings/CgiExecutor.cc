@@ -39,9 +39,8 @@ void dapps::CgiExecutor::initializeProcessOptions(uv_process_options_t* options,
     options->gid = 0;
 }
 
-void dapps::CgiExecutor::execute(DappsApplication* app, DappsSocket* socket, JSON_t* req, std::string args)
+void dapps::CgiExecutor::execute(DappsApplication* app, JSON_t* req, std::string args)
 {
-	m_socket = socket;
 	m_request = req;
 	uv_loop_t* _loop = uv_default_loop();
 	
@@ -93,8 +92,6 @@ void dapps::CgiExecutor::onExit(uv_process_t* processReq, int64_t exitStatus, in
 {
 	CgiExecutor* _this = (CgiExecutor*) processReq->data;
 	uv_read_stop((uv_stream_t*)_this->m_outputPipe);
-	
-	_this->m_socket->write(_this->m_output.c_strCopy(), _this->m_output.size());
 
 	//Cleanup
 	free((void*)(_this->m_process_options->file));
